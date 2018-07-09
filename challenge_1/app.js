@@ -1,6 +1,6 @@
 const boardSize = 3;
 const cellSize = 18;
-const strokes = { X: 0, O: 1 };
+const players = { X: "", O: "" };
 
 var board;
 var turnCounter;
@@ -8,6 +8,8 @@ var active;
 
 var preparePage = () => {
   var appNode = document.getElementById("app");
+  players["X"] = prompt("Enter name for player X.") || "X";
+  players["O"] = prompt("Enter name for player O.") || "O";
   appNode.appendChild(drawBoard());
   appNode.appendChild(drawControls());
   prepareGame();
@@ -60,7 +62,9 @@ var prepareGame = () => {
 
 var setCurrentPlayer = () => {
   var currentPlayerIndicator = document.getElementById("current-player");
-  currentPlayerIndicator.innerHTML = `It\'s player ${currentType}'s turn!`;
+  currentPlayerIndicator.innerHTML = `It\'s player ${
+    players[currentType]
+  }'s turn!`;
 };
 
 var handleCellClick = cell => {
@@ -75,7 +79,7 @@ var handleCellClick = cell => {
 
     if (checkWinner(row, col)) {
       active = false;
-      processEnd(`Player ${currentType} won!`);
+      processEnd(`Player ${players[currentType]} won!`);
     } else if (turnCounter === boardSize * boardSize) {
       active = false;
       processEnd("It's a tie!");
@@ -94,38 +98,35 @@ var processEnd = message => {
 };
 
 var setStroke = (row, col) => {
-  board[row][col] = strokes[currentType];
+  board[row][col] = currentType;
 };
 
 var checkWinner = (row, col) => {
-  var strokeVal = strokes[currentType];
   return (
-    rowWinner(row, strokeVal) ||
-    colWinner(col, strokeVal) ||
-    majDiagonalWinner(strokeVal) ||
-    minDiagonalWinner(strokeVal)
+    rowWinner(row, currentType) ||
+    colWinner(col, currentType) ||
+    majDiagonalWinner(currentType) ||
+    minDiagonalWinner(currentType)
   );
 };
 
-var rowWinner = (row, strokeVal) =>
-  board[row].reduce((isWinning, cell) => cell === strokeVal && isWinning, true);
+var rowWinner = (row, type) =>
+  board[row].reduce((isWinning, cell) => cell === type && isWinning, true);
 
-var colWinner = (col, strokeVal) =>
-  board.reduce((isWinning, row) => row[col] === strokeVal && isWinning, true);
+var colWinner = (col, type) =>
+  board.reduce((isWinning, row) => row[col] === type && isWinning, true);
 
-var majDiagonalWinner = strokeVal => {
+var majDiagonalWinner = type => {
   isWinning = true;
-  board.forEach(
-    (row, index) => (isWinning = row[index] === strokeVal && isWinning)
-  );
+  board.forEach((row, index) => (isWinning = row[index] === type && isWinning));
   return isWinning;
 };
 
-var minDiagonalWinner = strokeVal => {
+var minDiagonalWinner = type => {
   isWinning = true;
   board.forEach(
     (row, index) =>
-      (isWinning = row[board.length - index - 1] === strokeVal && isWinning)
+      (isWinning = row[board.length - index - 1] === type && isWinning)
   );
   return isWinning;
 };

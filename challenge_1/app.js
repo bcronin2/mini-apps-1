@@ -33,10 +33,17 @@ var drawBoard = () => {
 };
 
 var drawControls = () => {
+  var controls = document.createElement("div");
+  var currentPlayerIndicator = document.createElement("div");
   var newGameButton = document.createElement("button");
+
+  currentPlayerIndicator.setAttribute("id", "current-player");
   newGameButton.innerHTML = "New game";
   newGameButton.onclick = prepareGame;
-  return newGameButton;
+
+  controls.appendChild(currentPlayerIndicator);
+  controls.appendChild(newGameButton);
+  return controls;
 };
 
 var prepareGame = () => {
@@ -48,6 +55,12 @@ var prepareGame = () => {
   currentType = "X";
   turnCounter = 0;
   active = true;
+  setCurrentPlayer();
+};
+
+var setCurrentPlayer = () => {
+  var currentPlayerIndicator = document.getElementById("current-player");
+  currentPlayerIndicator.innerHTML = `It\'s player ${currentType}'s turn!`;
 };
 
 var handleCellClick = cell => {
@@ -68,6 +81,7 @@ var handleCellClick = cell => {
       processEnd("It's a tie!");
     } else {
       currentType = currentType === "X" ? "O" : "X";
+      setCurrentPlayer();
     }
   }
 };

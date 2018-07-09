@@ -1,18 +1,19 @@
 const boardSize = 3;
 const cellSize = 18;
-const players = { X: "", O: "" };
+const players = { X: { name: "", wins: 0 }, O: { name: "", wins: 0 } };
 
 var board;
 var currentPlayer;
 var turnCounter;
 var active;
+var lastWinner;
 
 // BOARD VIEW
 
 var initializePage = () => {
   var appNode = document.getElementById("app");
-  players["X"] = prompt("Enter name for player X.") || "X";
-  players["O"] = prompt("Enter name for player O.") || "O";
+  players["X"].name = prompt("Enter name for player X.") || "X";
+  players["O"].name = prompt("Enter name for player O.") || "O";
   appNode.appendChild(drawBoard());
   appNode.appendChild(drawControls());
   refreshPage();
@@ -40,13 +41,16 @@ var drawBoard = () => {
 var drawControls = () => {
   var controls = document.createElement("div");
   var currentPlayerIndicator = document.createElement("div");
+  var records = document.createElement("div");
   var newGameButton = document.createElement("button");
 
   currentPlayerIndicator.setAttribute("id", "current-player");
+  records.setAttribute("id", "player-records");
   newGameButton.innerHTML = "New game";
   newGameButton.addEventListener("click", prepareGame);
 
   controls.appendChild(currentPlayerIndicator);
+  controls.appendChild(records);
   controls.appendChild(newGameButton);
   return controls;
 };
@@ -58,14 +62,21 @@ var clearBoard = () => {
   }
 };
 
+var showRecords = () => {
+  var recordsNode = document.getElementById("player-records");
+  recordsNode.innerHTML = `${players.X.name} (X): ${players.X.wins} wins <br />
+    ${players.O.name} (O): ${players.O.wins} wins`;
+};
+
 var showCurrentPlayer = () => {
-  var currentPlayerIndicator = document.getElementById("current-player");
-  currentPlayerIndicator.innerHTML = `It\'s ${players[currentPlayer]}'s turn!`;
+  var currentPlayerNode = document.getElementById("current-player");
+  currentPlayerNode.innerHTML = `It\'s ${players[currentPlayer].name}'s turn!`;
 };
 
 var refreshPage = () => {
   prepareGame();
   clearBoard();
+  showRecords();
   showCurrentPlayer();
 };
 
@@ -81,7 +92,9 @@ var handleCellClick = cell => {
 
     if (checkWinner(row, col)) {
       active = false;
-      handleGameEnd(`Player ${players[currentPlayer]} won!`);
+      lastWinner = currentPlayer;
+      players[currentPlayer].wins++;
+      handleGameEnd(`Player ${players[currentPlayer].name} won!`);
     } else if (turnCounter === boardSize * boardSize) {
       active = false;
       handleGameEnd("It's a tie!");
@@ -103,7 +116,7 @@ var handleGameEnd = message => {
 
 var prepareGame = () => {
   board = new2DArray(boardSize);
-  currentPlayer = "X";
+  currentPlayer = lastWinner || "X";
   turnCounter = 0;
   active = true;
 };

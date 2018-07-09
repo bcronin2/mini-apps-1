@@ -3,16 +3,19 @@ const cellSize = 18;
 const players = { X: "", O: "" };
 
 var board;
+var currentPlayer;
 var turnCounter;
 var active;
 
-var preparePage = () => {
+// BOARD VIEW
+
+var initializePage = () => {
   var appNode = document.getElementById("app");
   players["X"] = prompt("Enter name for player X.") || "X";
   players["O"] = prompt("Enter name for player O.") || "O";
   appNode.appendChild(drawBoard());
   appNode.appendChild(drawControls());
-  prepareGame();
+  refreshPage();
 };
 
 var drawBoard = () => {
@@ -28,7 +31,7 @@ var drawBoard = () => {
       cell.style.border = "1px solid";
       cell.style.cursor = "pointer";
       cell.style.height = cell.style.width = `${cellSize}px`;
-      cell.onclick = e => handleCellClick(e.target);
+      cell.addEventListener("click", e => handleCellClick(e.target));
     }
   }
   return boardNode;
@@ -41,30 +44,29 @@ var drawControls = () => {
 
   currentPlayerIndicator.setAttribute("id", "current-player");
   newGameButton.innerHTML = "New game";
-  newGameButton.onclick = prepareGame;
+  newGameButton.addEventListener("click", prepareGame);
 
   controls.appendChild(currentPlayerIndicator);
   controls.appendChild(newGameButton);
   return controls;
 };
 
-var prepareGame = () => {
-  board = new2DArray(boardSize);
+var clearBoard = () => {
   var cells = document.getElementsByClassName("cell");
   for (var i = 0; i < cells.length; i++) {
     cells[i].innerHTML = "";
   }
-  currentType = "X";
-  turnCounter = 0;
-  active = true;
-  setCurrentPlayer();
 };
 
-var setCurrentPlayer = () => {
+var showCurrentPlayer = () => {
   var currentPlayerIndicator = document.getElementById("current-player");
-  currentPlayerIndicator.innerHTML = `It\'s player ${
-    players[currentType]
-  }'s turn!`;
+  currentPlayerIndicator.innerHTML = `It\'s ${players[currentPlayer]}'s turn!`;
+};
+
+var refreshPage = () => {
+  prepareGame();
+  clearBoard();
+  showCurrentPlayer();
 };
 
 var handleCellClick = cell => {
@@ -74,39 +76,48 @@ var handleCellClick = cell => {
     var row = cell.getAttribute("row");
     var col = cell.getAttribute("col");
 
-    cell.innerHTML = currentType;
-    setStroke(row, col);
+    cell.innerHTML = currentPlayer;
+    setCell(row, col);
 
     if (checkWinner(row, col)) {
       active = false;
-      processEnd(`Player ${players[currentType]} won!`);
+      handleGameEnd(`Player ${players[currentPlayer]} won!`);
     } else if (turnCounter === boardSize * boardSize) {
       active = false;
-      processEnd("It's a tie!");
+      handleGameEnd("It's a tie!");
     } else {
-      currentType = currentType === "X" ? "O" : "X";
-      setCurrentPlayer();
+      currentPlayer = currentPlayer === "X" ? "O" : "X";
+      showCurrentPlayer();
     }
   }
 };
 
-var processEnd = message => {
+var handleGameEnd = message => {
   var newGame = confirm(`${message} Play again?`);
   if (newGame) {
-    prepareGame();
+    refreshPage();
   }
 };
 
-var setStroke = (row, col) => {
-  board[row][col] = currentType;
+// BOARD LOGIC
+
+var prepareGame = () => {
+  board = new2DArray(boardSize);
+  currentPlayer = "X";
+  turnCounter = 0;
+  active = true;
+};
+
+var setCell = (row, col) => {
+  board[row][col] = currentPlayer;
 };
 
 var checkWinner = (row, col) => {
   return (
-    rowWinner(row, currentType) ||
-    colWinner(col, currentType) ||
-    majDiagonalWinner(currentType) ||
-    minDiagonalWinner(currentType)
+    rowWinner(row, currentPlayer) ||
+    colWinner(col, currentPlayer) ||
+    majDiagonalWinner(currentPlayer) ||
+    minDiagonalWinner(currentPlayer)
   );
 };
 
@@ -142,4 +153,4 @@ var new2DArray = size => {
   return arr;
 };
 
-preparePage();
+initializePage();

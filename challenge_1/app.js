@@ -1,18 +1,19 @@
-var strokes = { X: 0, O: 1 };
+const boardSize = 3;
+const cellSize = 18;
+const strokes = { X: 0, O: 1 };
 
-var board = [];
-
+var board;
+var turnCounter;
 var active;
 
-var winner;
-
-var preparePage = (boardSize, cellSize) => {
+var preparePage = () => {
   var appNode = document.getElementById("app");
-  appNode.appendChild(drawBoard(boardSize, cellSize));
-  prepareGame(boardSize);
+  appNode.appendChild(drawBoard());
+  appNode.appendChild(drawControls());
+  prepareGame();
 };
 
-var drawBoard = (boardSize, cellSize) => {
+var drawBoard = () => {
   var boardNode = document.createElement("table");
   boardNode.setAttribute("id", "board");
   for (var i = 0; i < boardSize; i++) {
@@ -31,38 +32,59 @@ var drawBoard = (boardSize, cellSize) => {
   return boardNode;
 };
 
-var prepareGame = boardSize => {
+var drawControls = () => {
+  var newGameButton = document.createElement("button");
+  newGameButton.innerHTML = "New game";
+  newGameButton.onclick = prepareGame;
+  return newGameButton;
+};
+
+var prepareGame = () => {
   board = new2DArray(boardSize);
   var cells = document.getElementsByClassName("cell");
   for (var i = 0; i < cells.length; i++) {
     cells[i].innerHTML = "";
   }
   currentType = "X";
+  turnCounter = 0;
   active = true;
 };
 
 var handleCellClick = cell => {
   if (active && !cell.innerHTML) {
+    turnCounter++;
+
+    var row = cell.getAttribute("row");
+    var col = cell.getAttribute("col");
+
     cell.innerHTML = currentType;
-    winningMove = setStroke(cell.getAttribute("row"), cell.getAttribute("col"));
-    if (winningMove) {
+    setStroke(row, col);
+
+    if (checkWinner(row, col)) {
       active = false;
-      winner = currentType;
+      processEnd(`Player ${currentType} won!`);
+    } else if (turnCounter === boardSize * boardSize) {
+      active = false;
+      processEnd("It's a tie!");
     } else {
       currentType = currentType === "X" ? "O" : "X";
     }
   }
 };
 
-var setStroke = (row, col) => {
-  if (!board[row][col]) {
-    board[row][col] = strokes[currentType];
-    return checkWinner(row, col, currentType);
+var processEnd = message => {
+  var newGame = confirm(`${message} Play again?`);
+  if (newGame) {
+    prepareGame();
   }
 };
 
-var checkWinner = (row, col, type) => {
-  var strokeVal = strokes[type];
+var setStroke = (row, col) => {
+  board[row][col] = strokes[currentType];
+};
+
+var checkWinner = (row, col) => {
+  var strokeVal = strokes[currentType];
   return (
     rowWinner(row, strokeVal) ||
     colWinner(col, strokeVal) ||
@@ -105,4 +127,4 @@ var new2DArray = size => {
   return arr;
 };
 
-preparePage(3, 16);
+preparePage();

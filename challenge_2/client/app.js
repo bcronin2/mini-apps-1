@@ -23,7 +23,7 @@ $(document).ready(() => {
       data: JSON.stringify(json),
       contentType: "application/json",
       success: function(data) {
-        $csvText.html(data.replace(/\n/, "<br />"));
+        $csvText.html(data.replace(/\n/g, "<br />"));
         $jsonText.val("");
       },
       error: function(err) {

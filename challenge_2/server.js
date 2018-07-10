@@ -15,7 +15,6 @@ server.use(express.static(`${__dirname}/client`));
 
 server.post("/json", (req, res) => {
   let csv = utils.parseToCSV(req.body);
-  // res.type("text/html; charset=utf8");
   res.send(csv);
 });
 

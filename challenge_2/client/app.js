@@ -18,6 +18,9 @@ $(document).ready(() => {
   });
 
   const processJSON = json => {
+    if ($filterText.val()) {
+      json.filter = $filterText.val();
+    }
     $.ajax({
       url: endpoint,
       type: "POST",

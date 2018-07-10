@@ -25,7 +25,7 @@ $(document).ready(() => {
         $jsonText.val("");
       },
       error: function(err) {
-        console.log(err, input);
+        console.log(err, json);
       }
     });
   };

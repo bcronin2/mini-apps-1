@@ -14,9 +14,13 @@ const getHeading = jsonData => {
 };
 
 const getRows = jsonData => {
-  let flatJSON = flattenJSON(jsonData);
-  let rows = [];
-  flatJSON.forEach(obj => rows.push(getRow(obj)));
+  var rows = [];
+  if (Array.isArray(jsonData)) {
+    jsonData.forEach(jsonDatum => (rows = rows.concat(getRows(jsonDatum))));
+  } else {
+    rows.push(getRow(jsonData));
+    rows = rows.concat(getRows(jsonData.children));
+  }
   return rows.join("\n");
 };
 
@@ -28,25 +32,6 @@ const getRow = jsonObj => {
     }
   }
   return row.join(",");
-};
-
-const flattenJSON = jsonData => {
-  var flatJSON = [];
-  if (Array.isArray(jsonData)) {
-    jsonData.forEach(
-      jsonDatum => (flatJSON = flatJSON.concat(flattenJSON(jsonDatum)))
-    );
-  } else {
-    let obj = {};
-    for (let key in jsonData) {
-      if (key !== "children") {
-        obj[key] = jsonData[key];
-      }
-    }
-    flatJSON.push(obj);
-    flatJSON = flatJSON.concat(flattenJSON(jsonData.children));
-  }
-  return flatJSON;
 };
 
 module.exports = {

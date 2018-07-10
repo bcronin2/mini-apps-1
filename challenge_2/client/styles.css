@@ -18,23 +18,30 @@ body {
 }
 
 #json-parser {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  grid-template-columns: 1;
   grid-row: 2;
   grid-column: 2;
-  justify-content: center;
   width: 100%;
 }
 
-#json-text {
-  justify-self: center;
+#json-filter {
   grid-row: 1;
+  justify-self: start;
+}
+
+#json-text {
+  grid-row: 2;
+  justify-self: center;
   width: inherit;
   height: 5rem;
   resize: vertical;
 }
 
 #json-submit {
+  grid-row: 3;
   justify-self: center;
-  grid-row: 2;
   width: 4rem;
 }
 

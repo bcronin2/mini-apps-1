@@ -2,6 +2,7 @@
 
 $(document).ready(() => {
   const endpoint = "/json";
+  const $filterText = $("#json-filter");
   const $jsonText = $("#json-text");
   const $csvText = $("#csv-text");
 

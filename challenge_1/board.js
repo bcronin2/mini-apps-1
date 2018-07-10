@@ -8,6 +8,10 @@ window.board = {
     this.board[row][col] = type;
   },
 
+  isOpen: function(row, col) {
+    return !this.board[row][col];
+  },
+
   isWinner: function(row, col, type) {
     return (
       this._isRowWinner(row, type) ||

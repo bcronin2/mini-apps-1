@@ -1,4 +1,4 @@
-window.controller = {
+class controller {
   players: {
     X: { name: "", wins: 0 },
     O: { name: "", wins: 0 }
@@ -13,14 +13,11 @@ window.controller = {
     this.maxTurns = boardSize * boardSize;
   },
 
-  handleCellClick: function(cell, callback) {
-    if (this.inProgress && !cell.innerHTML) {
-      var row = cell.getAttribute("row");
-      var col = cell.getAttribute("col");
-      cell.innerHTML = this.current;
+  handleCellClick: function(row, col, callback) {
+    if (this.inProgress && this.board.isOpen(row, col)) {
       this.turns++;
       this.board.setCell(row, col, this.current);
-      callback(this._getStatusMessage(row, col));
+      callback(this.current, this._getStatusMessage(row, col));
     }
   },
 

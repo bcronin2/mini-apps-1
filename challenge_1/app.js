@@ -44,8 +44,9 @@ const gameView = {
     cellNode.setAttribute("row", i);
     cellNode.setAttribute("col", j);
     cellNode.addEventListener("click", () => {
-      this.controller.handleCellClick(cellNode, message => {
+      this.controller.handleCellClick(i, j, (value, message) => {
         document.getElementById("newGameButton").style.display = "block";
+        cellNode.innerHTML = value;
         this.showCurrentPlayer();
         if (message) {
           this.handleGameEnd(message);

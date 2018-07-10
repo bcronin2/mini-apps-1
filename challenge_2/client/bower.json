@@ -1,0 +1,17 @@
+{
+  "name": "client",
+  "homepage": "https://github.com/bcronin2/hrsf99-mini-apps-1",
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.3.1"
+  }
+}

@@ -1,7 +1,6 @@
 "use strict";
 
-const parseToCSV = jsonString => {
-  let jsonData = JSON.parse(jsonString);
+const parseToCSV = jsonData => {
   let csv = getHeading(jsonData).join(",") + "\n";
   csv += getRows(jsonData);
   return csv;
@@ -17,9 +16,7 @@ const getHeading = jsonData => {
 const getRows = jsonData => {
   let flatJSON = flattenJSON(jsonData);
   let rows = [];
-
   flatJSON.forEach(obj => rows.push(getRow(obj)));
-
   return rows.join("\n");
 };
 

@@ -9,16 +9,19 @@ $(document).ready(() => {
     e.preventDefault();
   });
 
-  const processJSON = json => {
+  const processJSON = input => {
     $.ajax({
       url: endpoint,
       type: "POST",
-      data: json,
+      data: input,
+      contentType: "application/json",
       success: function(data) {
-        console.log(data);
+        // console.log(data);
         $jsonText.val("");
       },
-      error: function(err) {}
+      error: function(err) {
+        console.log(input);
+      }
     });
   };
 });

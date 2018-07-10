@@ -3,8 +3,9 @@
 let rowId = 1;
 
 const parseToCSV = jsonData => {
-  let csv = `id,parentId,${getHeading(jsonData).join(",")}\n`;
-  csv += getRows(jsonData).join("\n");
+  let fields = getHeading(jsonData);
+  let csv = `id,parentId,${fields.join(",")}\n`;
+  csv += getRows(jsonData, fields).join("\n");
   console.log(csv);
   return csv;
 };
@@ -16,26 +17,26 @@ const getHeading = jsonData => {
   return Object.keys(jsonData).filter(key => key !== "children");
 };
 
-const getRows = (jsonData, parentId) => {
+const getRows = (jsonData, fields, parentId) => {
   var rows = [];
   if (Array.isArray(jsonData)) {
     jsonData.forEach(
-      jsonDatum => (rows = rows.concat(getRows(jsonDatum, parentId)))
+      jsonDatum => (rows = rows.concat(getRows(jsonDatum, fields, parentId)))
     );
   } else {
-    rows.push(`${rowId},${parentId || ""},${getRow(jsonData).join(",")}`);
-    rows = rows.concat(getRows(jsonData.children, rowId++));
+    rows.push(
+      `${rowId},${parentId || ""},${getRow(jsonData, fields).join(",")}`
+    );
+    rows = rows.concat(getRows(jsonData.children, fields, rowId++));
   }
   return rows;
 };
 
-const getRow = jsonObj => {
+const getRow = (jsonObj, fields) => {
   let row = [];
-  for (let key in jsonObj) {
-    if (key !== "children") {
-      row.push(jsonObj[key]);
-    }
-  }
+  fields.forEach(field => {
+    row.push(jsonObj[field] || "");
+  });
   return row;
 };
 

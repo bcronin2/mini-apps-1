@@ -30,6 +30,7 @@ $(document).ready(() => {
       success: function(data) {
         generateTableFromCSV(data);
         $jsonText.val("");
+        $jsonFilter.val("");
       },
       error: function(err) {
         console.log(err, json);
@@ -38,17 +39,15 @@ $(document).ready(() => {
   };
 
   const generateTableFromCSV = csv => {
+    $csvData.html("");
     let rows = csv.split("\n");
-    generateRow(rows[0].split(","));
-    for (let i = 1; i < rows.length; i++) {
-      generateRow(rows[i].split(","));
-    }
+    rows.forEach((row, index) => generateRow(row.split(","), index));
   };
 
-  const generateRow = fields => {
+  const generateRow = (fields, index) => {
     let $heading = $("<tr>").appendTo($csvData);
     fields.forEach(field => {
-      let $field = $("<td>").text(field);
+      let $field = $(index ? "<td>" : "<th>").text(field);
       $field.appendTo($heading);
     });
   };

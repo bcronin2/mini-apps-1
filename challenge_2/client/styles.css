@@ -8,14 +8,16 @@ body {
   display: grid;
   grid-template-rows: 10% 30% auto;
   grid-template-columns: 20% 60% 20%;
-  grid-row-gap: 2rem;
+  grid-row-gap: 1.5rem;
   height: 100%;
 }
 
 #title {
+  display: grid;
+  align-items: center;
+  justify-items: center;
   grid-row: 1;
   grid-column: 2;
-  padding: 2rem;
 }
 
 #json-parser {

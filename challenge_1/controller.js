@@ -11,7 +11,7 @@ class Controller {
     this.game = new Game(boardSize, this.defender);
   }
 
-  handleCellClick(row, col, callback) {
+  fillCell(row, col, callback) {
     if (this.game.inProgress && this.game.isOpen(row, col)) {
       this.game.setCell(row, col);
       callback(this.game.current, this._getStatusMessage(row, col));

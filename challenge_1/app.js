@@ -36,19 +36,23 @@ class App {
     var cellNode = document.createElement("span");
     cellNode.setAttribute("class", "cell");
     cellNode.setAttribute("id", `${row}-${col}`);
-    cellNode.addEventListener("click", () => {
-      this.controller.handleCellClick(row, col, (value, message) => {
-        cellNode.innerHTML = value;
-        this.setNewGameButtonVisibility("block");
-        this.showCurrentPlayer();
-        if (message) {
-          this.endGame(message);
-        } else {
-          this.rotateBoard(this.setCells.bind(this));
-        }
-      });
-    });
+    cellNode.addEventListener("click", () =>
+      this.handleCellClick(cellNode, row, col)
+    );
     return cellNode;
+  }
+
+  handleCellClick(cellNode, row, col) {
+    this.controller.fillCell(row, col, (value, message) => {
+      cellNode.innerHTML = value;
+      this.setNewGameButtonVisibility("block");
+      this.showCurrentPlayer();
+      if (message) {
+        this.endGame(message);
+      } else {
+        this.rotateBoard(this.setCells.bind(this));
+      }
+    });
   }
 
   setCells() {

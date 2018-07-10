@@ -8,7 +8,10 @@ const gameView = {
     this.boardSize = boardSize;
     var appNode = document.getElementById("app");
     appNode.appendChild(this.drawBoard());
-    appNode.appendChild(this.drawControls());
+
+    document
+      .getElementById("newGameButton")
+      .addEventListener("click", this.refreshPage.bind(this));
 
     this.setPlayers();
     this.refreshPage();
@@ -22,50 +25,38 @@ const gameView = {
   },
 
   drawBoard: function() {
-    var boardNode = document.createElement("table");
-    boardNode.setAttribute("id", "board");
+    var boardNode = document.getElementById("board");
     for (var i = 0; i < this.boardSize; i++) {
-      var row = boardNode.insertRow();
+      var rowNode = document.createElement("div");
+      rowNode.setAttribute("class", "row");
+      rowNode.setAttribute("class", "row");
       for (var j = 0; j < this.boardSize; j++) {
-        var cell = row.insertCell();
-        cell.setAttribute("class", "cell");
-        cell.setAttribute("row", i);
-        cell.setAttribute("col", j);
-        cell.style.border = "1px solid";
-        cell.style.cursor = "pointer";
-        cell.style.height = cell.style.width = `${cellSize}px`;
-        cell.addEventListener("click", e => {
-          this.controller.handleCellClick(e.target, message => {
-            this.showCurrentPlayer();
-            if (message) {
-              this.handleGameEnd(message);
-            }
-          });
-        });
+        rowNode.appendChild(this.drawCell(i, j));
       }
+      boardNode.appendChild(rowNode);
     }
     return boardNode;
   },
 
-  drawControls: function() {
-    var controls = document.createElement("div");
-    var currentPlayerIndicator = document.createElement("div");
-    var records = document.createElement("div");
-    var newGameButton = document.createElement("button");
-
-    currentPlayerIndicator.setAttribute("id", "current-player");
-    records.setAttribute("id", "player-records");
-    newGameButton.innerHTML = "New game";
-    newGameButton.addEventListener("click", this.refreshPage.bind(this));
-
-    controls.appendChild(currentPlayerIndicator);
-    controls.appendChild(records);
-    controls.appendChild(newGameButton);
-    return controls;
+  drawCell: function(i, j) {
+    var cellNode = document.createElement("span");
+    cellNode.setAttribute("class", "cell");
+    cellNode.setAttribute("row", i);
+    cellNode.setAttribute("col", j);
+    cellNode.addEventListener("click", () => {
+      this.controller.handleCellClick(cellNode, message => {
+        document.getElementById("newGameButton").style.display = "block";
+        this.showCurrentPlayer();
+        if (message) {
+          this.handleGameEnd(message);
+        }
+      });
+    });
+    return cellNode;
   },
 
   showRecords: function() {
-    var recordsNode = document.getElementById("player-records");
+    var recordsNode = document.getElementById("records");
     recordsNode.innerHTML = `${this.controller.players.X.name} (X): ${
       this.controller.players.X.wins
     } wins <br />
@@ -75,7 +66,7 @@ const gameView = {
   },
 
   showCurrentPlayer: function() {
-    var currentPlayerNode = document.getElementById("current-player");
+    var currentPlayerNode = document.getElementById("status");
     currentPlayerNode.innerHTML = `It\'s ${
       this.controller.players[this.controller.current].name
     }'s turn!`;
@@ -85,6 +76,8 @@ const gameView = {
     this.controller.init(this.boardSize);
     this.clearBoard();
     this.showCurrentPlayer();
+    this.showRecords();
+    document.getElementById("newGameButton").style.display = "none";
   },
 
   clearBoard: function() {

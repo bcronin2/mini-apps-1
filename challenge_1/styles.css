@@ -1,0 +1,47 @@
+body {
+  font-family: sans-serif;
+}
+
+#app {
+  display: grid;
+  grid-template-columns: 30% auto auto;
+  grid-template-rows: 20% auto auto;
+  height: 100vh;
+}
+
+#status {
+  align-self: end;
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: center;
+}
+
+#sidebar {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+#board {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+}
+
+.cell {
+  border: 2px solid black;
+  display: inline;
+  cursor: pointer;
+  font-size: 2rem;
+  height: 2rem;
+  padding: 0.4rem;
+  text-align: center;
+  width: 2rem;
+}
+
+.cell:hover {
+  background-color: lightgrey;
+}

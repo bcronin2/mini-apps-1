@@ -3,6 +3,7 @@
 $(document).ready(() => {
   const endpoint = "/json";
   const $jsonText = $("#json-text");
+  const $csvText = $("#csv-text");
 
   $("#json-parser").on("submit", e => {
     try {
@@ -22,6 +23,7 @@ $(document).ready(() => {
       data: JSON.stringify(json),
       contentType: "application/json",
       success: function(data) {
+        $csvText.html(data.replace(/\n/, "<br />"));
         $jsonText.val("");
       },
       error: function(err) {

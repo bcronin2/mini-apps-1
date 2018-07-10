@@ -5,22 +5,27 @@ $(document).ready(() => {
   const $jsonText = $("#json-text");
 
   $("#json-parser").on("submit", e => {
-    processJSON($jsonText.val());
-    e.preventDefault();
+    try {
+      let json = JSON.parse($jsonText.val());
+      processJSON(json);
+    } catch (err) {
+      console.log("error caught");
+    } finally {
+      e.preventDefault();
+    }
   });
 
-  const processJSON = input => {
+  const processJSON = json => {
     $.ajax({
       url: endpoint,
       type: "POST",
-      data: input,
+      data: JSON.stringify(json),
       contentType: "application/json",
       success: function(data) {
-        // console.log(data);
         $jsonText.val("");
       },
       error: function(err) {
-        console.log(input);
+        console.log(err, input);
       }
     });
   };

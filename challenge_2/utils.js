@@ -1,8 +1,8 @@
 "use strict";
 
 const parseToCSV = jsonData => {
-  let csv = getHeading(jsonData).join(",") + "\n\r";
-  csv += getRows(jsonData);
+  let csv = getHeading(jsonData).join(",") + "\n";
+  csv += getRows(jsonData).join("\n");
   return csv;
 };
 
@@ -18,10 +18,10 @@ const getRows = jsonData => {
   if (Array.isArray(jsonData)) {
     jsonData.forEach(jsonDatum => (rows = rows.concat(getRows(jsonDatum))));
   } else {
-    rows.push(getRow(jsonData));
+    rows.push(getRow(jsonData).join(","));
     rows = rows.concat(getRows(jsonData.children));
   }
-  return rows.join("\n");
+  return rows;
 };
 
 const getRow = jsonObj => {
@@ -31,7 +31,7 @@ const getRow = jsonObj => {
       row.push(jsonObj[key]);
     }
   }
-  return row.join(",");
+  return row;
 };
 
 module.exports = {

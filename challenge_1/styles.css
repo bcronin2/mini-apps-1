@@ -21,9 +21,11 @@ body {
   grid-row: 2;
 }
 
-#board {
+#board,
+#boardClone {
   grid-column: 2;
   grid-row: 2;
+  height: fit-content;
 }
 
 .row {
@@ -44,4 +46,12 @@ body {
 
 .cell:hover {
   background-color: lightgrey;
+}
+
+#boardClone {
+  transform-origin: center center;
+  /* -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out; */
+  transition: all 0.5s ease-in-out;
 }

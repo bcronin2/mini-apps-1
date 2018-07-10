@@ -35,8 +35,7 @@ class App {
   drawCell(row, col) {
     var cellNode = document.createElement("span");
     cellNode.setAttribute("class", "cell");
-    cellNode.setAttribute("row", row);
-    cellNode.setAttribute("col", col);
+    cellNode.setAttribute("id", `${row}-${col}`);
     cellNode.addEventListener("click", () => {
       this.controller.handleCellClick(row, col, (value, message) => {
         cellNode.innerHTML = value;
@@ -44,33 +43,78 @@ class App {
         this.showCurrentPlayer();
         if (message) {
           this.endGame(message);
+        } else {
+          this.rotateBoard(this.setCells.bind(this));
         }
       });
     });
     return cellNode;
   }
 
+  setCells() {
+    for (var i = 0; i < this.boardSize; i++) {
+      for (var j = 0; j < this.boardSize; j++) {
+        document.getElementById(
+          `${i}-${j}`
+        ).innerHTML = this.controller.game.board[i][j];
+      }
+    }
+  }
+
+  rotateBoard(callback) {
+    var boardNode = document.getElementById("board");
+    var boardNodeClone = boardNode.cloneNode(true);
+    boardNode.style.display = "none";
+
+    document.getElementById("app").appendChild(boardNodeClone);
+    boardNodeClone.setAttribute("id", "boardClone");
+    // boardNodeClone.style.webkitTransform = "rotate(-90deg)";
+    // boardNodeClone.style.mozTransform = "rotate(-90deg)";
+    // boardNodeClone.style.msTransform = "rotate(-90deg)";
+    // boardNodeClone.style.oTransform = "rotate(-90deg)";
+    boardNodeClone.style.transform = "rotate(-90deg)";
+
+    setTimeout(() => {
+      callback();
+      boardNodeClone.parentNode.removeChild(boardNodeClone);
+      boardNode.style.display = "block";
+    }, 500);
+  }
+
   setNewGameButtonVisibility(visibility) {
     document.getElementById("newGameButton").style.display = visibility;
   }
 
-  showRecords() {
-    var recordsNode = document.getElementById("records");
-    recordsNode.innerHTML = `${this.controller.players.X.name} (X): ${
-      this.controller.players.X.wins
-    } wins <br />
-      ${this.controller.players.O.name} (O): ${
-      this.controller.players.O.wins
-    } wins`;
+  refreshPage() {
+    if (this.controller.game.turns > 0) {
+      this.controller.resetGame(this.boardSize);
+    }
+    this.clearBoard();
+    this.showCurrentPlayer();
+    this.showRecords();
+    this.setNewGameButtonVisibility("none");
   }
 
   showCurrentPlayer() {
-    var currentPlayerNode = document.getElementById("status");
-    currentPlayerNode.innerHTML = `It\'s ${this.getCurrentPlayer()}'s turn!`;
+    var currentPlayerNode = document.getElementById("currentPlayer");
+    currentPlayerNode.innerHTML = this.controller.players[
+      this.controller.game.current
+    ].name;
   }
 
-  getCurrentPlayer() {
-    return this.controller.players[this.controller.game.current].name;
+  showRecords() {
+    document.getElementById(
+      "playerXName"
+    ).innerHTML = this.controller.players.X.name;
+    document.getElementById(
+      "playerXWins"
+    ).innerHTML = this.controller.players.X.wins;
+    document.getElementById(
+      "playerOName"
+    ).innerHTML = this.controller.players.O.name;
+    document.getElementById(
+      "playerOWins"
+    ).innerHTML = this.controller.players.O.wins;
   }
 
   endGame(message) {
@@ -78,14 +122,6 @@ class App {
     if (newGame) {
       this.refreshPage();
     }
-  }
-
-  refreshPage() {
-    this.controller.resetGame(this.boardSize);
-    this.clearBoard();
-    this.showCurrentPlayer();
-    this.showRecords();
-    this.setNewGameButtonVisibility("none");
   }
 
   clearBoard() {

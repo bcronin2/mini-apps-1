@@ -1,6 +1,6 @@
 class Game {
   constructor(boardSize, defender) {
-    this.size = boardSize;
+    this.boardSize = boardSize;
     this.board = this._initGrid(boardSize);
     this.inProgress = true;
     this.current = defender || "X";
@@ -24,6 +24,33 @@ class Game {
       this._isMajDiagonalWinner() ||
       this._isMinDiagonalWinner()
     );
+  }
+
+  rotateBoard() {
+    var oldBoard = this.board;
+    var newBoard = this._initGrid(this.boardSize);
+    for (var i = 0; i < this.boardSize; i++) {
+      for (var j = 0; j < this.boardSize; j++) {
+        newBoard[i][j] = oldBoard[j][this.boardSize - i - 1];
+      }
+    }
+    this.board = newBoard;
+  }
+
+  applyGravity() {
+    for (var i = this.boardSize - 2; i >= 0; i--) {
+      for (var j = 0; j < this.boardSize; j++) {
+        var cellValue = this.board[i][j];
+        if (cellValue) {
+          var nextRow = i + 1;
+          while (nextRow < this.boardSize && !this.board[nextRow][j]) {
+            nextRow++;
+          }
+          this.board[i][j] = null;
+          this.board[nextRow - 1][j] = cellValue;
+        }
+      }
+    }
   }
 
   _isRowWinner(row) {
@@ -52,7 +79,8 @@ class Game {
     var isWinning = true;
     this.board.forEach(
       (row, index) =>
-        (isWinning = row[this.size - index - 1] === this.current && isWinning)
+        (isWinning =
+          row[this.boardSize - index - 1] === this.current && isWinning)
     );
     return isWinning;
   }

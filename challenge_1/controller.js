@@ -28,6 +28,8 @@ class Controller {
       return "It's a tie!";
     } else {
       this.game.inProgress = true;
+      this.game.rotateBoard();
+      this.game.applyGravity();
       this.game.current = this.game.current === "X" ? "O" : "X";
       return "";
     }

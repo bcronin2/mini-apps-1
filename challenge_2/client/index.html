@@ -14,6 +14,10 @@
     <form id="json-parser">
       <input id="json-filter" placeholder="Filter results...">
       <textarea id="json-text" placeholder="Paste JSON text here..." autofocus></textarea>
+      <div id="json-upload">
+        <label for="json-file">OR</label>
+        <input type="file" id="json-file" name="file">
+      </div>
       <input type="submit" id="json-submit" value="Parse!">
     </form>
     <table id="csv-data"></table>

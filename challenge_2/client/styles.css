@@ -22,8 +22,7 @@ body {
 
 #json-parser {
   display: grid;
-  grid-template-rows: 2rem auto auto;
-  grid-template-columns: 1;
+  grid-template-rows: 2rem auto auto auto;
   grid-row-gap: 0.5rem;
   grid-row: 2;
   grid-column: 2;
@@ -44,10 +43,13 @@ body {
   resize: vertical;
 }
 
-#json-submit {
+#json-upload {
   grid-row: 3;
+}
+
+#json-submit {
+  grid-row: 4;
   justify-self: center;
-  width: 4rem;
 }
 
 #csv-data {

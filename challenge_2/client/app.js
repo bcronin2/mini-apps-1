@@ -17,33 +17,14 @@ $(document).ready(() => {
       parseFromFile();
     } else {
       $jsonText.html("");
-      parseJSON($jsonText.val());
+      uploadJSON($jsonText.val());
     }
     e.preventDefault();
   });
 
   const parseFromFile = () => {
     let inputFile = $jsonFile.get(0).files[0];
-    readAsTextAsync(inputFile).then(parseJSON);
-  };
-
-  const parseJSON = jsonStr => {
-    let jsonObj = processJSON(jsonStr);
-    $.ajax({
-      url: endpoint,
-      type: "POST",
-      data: JSON.stringify(jsonObj),
-      contentType: "application/json",
-      success: function(data) {
-        generateTableFromCSV(data);
-        $jsonText.val("");
-        $jsonFilter.val("");
-        $jsonFile.val("");
-      },
-      error: function(err) {
-        console.log(err, jsonStr);
-      }
-    });
+    readAsTextAsync(inputFile).then(uploadJSON);
   };
 
   const processJSON = jsonStr => {
@@ -56,6 +37,39 @@ $(document).ready(() => {
     } catch (err) {
       alert(err);
     }
+  };
+
+  const uploadJSON = jsonStr => {
+    let jsonObj = processJSON(jsonStr);
+    $.ajax({
+      url: endpoint,
+      type: "POST",
+      data: JSON.stringify(jsonObj),
+      contentType: "application/json",
+      success: function(data) {
+        generateTableFromCSV(data);
+        $jsonText.val("");
+        $jsonFilter.val("");
+        $jsonFile.val("");
+        retrieveCSV();
+      },
+      error: function(err) {
+        console.log(err, jsonStr);
+      }
+    });
+  };
+
+  const retrieveCSV = () => {
+    $.ajax({
+      url: endpoint,
+      type: "GET",
+      success: function(data) {
+        console.log(data);
+      },
+      error: function(err) {
+        console.log(err);
+      }
+    });
   };
 
   const generateTableFromCSV = csv => {
@@ -71,18 +85,18 @@ $(document).ready(() => {
       $field.appendTo($heading);
     });
   };
-
-  const readAsTextAsync = file => {
-    const fileReader = new FileReader();
-    return new Promise((resolve, reject) => {
-      fileReader.onerror = () => {
-        fileReader.abort();
-        reject(new DOMException("Problem parsing input file."));
-      };
-      fileReader.onload = () => {
-        resolve(fileReader.result);
-      };
-      fileReader.readAsText(file);
-    });
-  };
 });
+
+const readAsTextAsync = file => {
+  const fileReader = new FileReader();
+  return new Promise((resolve, reject) => {
+    fileReader.onerror = () => {
+      fileReader.abort();
+      reject(new DOMException("Problem parsing input file."));
+    };
+    fileReader.onload = () => {
+      resolve(fileReader.result);
+    };
+    fileReader.readAsText(file);
+  });
+};

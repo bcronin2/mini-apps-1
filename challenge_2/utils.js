@@ -1,8 +1,9 @@
 "use strict";
 
-let rowId = 1;
+let rowId;
 
 const parseToCSV = jsonData => {
+  rowId = 1;
   let fields = getHeading(jsonData);
   let csv = `id,parentId,${fields.join(",")}\n`;
   csv += getRows(jsonData, fields, jsonData.filter).join("\n");

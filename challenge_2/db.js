@@ -5,28 +5,21 @@ const dbName = "admin";
 const collectionName = "json_to_csv";
 
 module.exports = {
-  fetchAll: function() {
+  fetchAll: function(send) {
     queryDB((dbObj, cb) => {
       dbObj
-        .collection(dbName)
-        .find()
-        .toArray(cb);
+        .collection(collectionName)
+        .find({})
+        .toArray((err, res) => {
+          send(res);
+          cb(err, res);
+        });
     });
   },
 
-  insertAll: function(obj) {
-    if (Array.isArray(obj)) {
-      for (let i = 0; i < obj.length; i++) {
-        this.insertOne(obj[i]);
-      }
-    } else {
-      this.insertOne(obj);
-    }
-  },
-
-  insertOne: function(obj) {
+  insertOne: function(json) {
     queryDB((dbObj, cb) => {
-      dbObj.collection(collectionName).insertOne(obj, cb);
+      dbObj.collection(collectionName).insertOne(json, cb);
     });
   }
 };

@@ -15,14 +15,14 @@ server.use(parser.json());
 
 server.use(express.static(`${__dirname}/client`));
 
-server.post("/json", (req, res) => {
+server.post("/csv", (req, res) => {
   let json = req.body;
   let csv = utils.parseToCSV(json);
   db.insertOne({ json: json, csv: csv });
   res.send(csv);
 });
 
-server.get("/json", (req, res) => {
+server.get("/csv", (req, res) => {
   let results = db.fetchAll(results => {
     res.send(results.map(result => result.csv));
   });

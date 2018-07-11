@@ -1,26 +1,15 @@
 "use strict";
 
 $(document).ready(() => {
-  const endpoint = "/json";
+  const endpoint = "/csv";
 
   const $jsonParser = $("#json-parser");
   const $jsonFilter = $("#json-filter");
   const $jsonText = $("#json-text");
   const $jsonFile = $("#json-file");
+  const $allData = $("#all-data");
+  const $noData = $("#no-data");
   const $csvData = $("#csv-data");
-
-  $jsonFile.on("click", () => $jsonText.val(""));
-  $jsonText.on("click", () => $jsonFile.val(""));
-
-  $jsonParser.on("submit", e => {
-    if ($jsonFile.get(0).files.length) {
-      parseFromFile();
-    } else {
-      $jsonText.html("");
-      uploadJSON($jsonText.val());
-    }
-    e.preventDefault();
-  });
 
   const parseFromFile = () => {
     let inputFile = $jsonFile.get(0).files[0];
@@ -39,6 +28,19 @@ $(document).ready(() => {
     }
   };
 
+  const retrieveCSVs = () => {
+    $.ajax({
+      url: endpoint,
+      type: "GET",
+      success: function(data) {
+        refreshData(data);
+      },
+      error: function(err) {
+        console.log(err);
+      }
+    });
+  };
+
   const uploadJSON = jsonStr => {
     let jsonObj = processJSON(jsonStr);
     $.ajax({
@@ -47,11 +49,10 @@ $(document).ready(() => {
       data: JSON.stringify(jsonObj),
       contentType: "application/json",
       success: function(data) {
-        generateTableFromCSV(data);
+        refreshData([data]);
         $jsonText.val("");
         $jsonFilter.val("");
         $jsonFile.val("");
-        retrieveCSV();
       },
       error: function(err) {
         console.log(err, jsonStr);
@@ -59,32 +60,54 @@ $(document).ready(() => {
     });
   };
 
-  const retrieveCSV = () => {
-    $.ajax({
-      url: endpoint,
-      type: "GET",
-      success: function(data) {
-        console.log(data);
-      },
-      error: function(err) {
-        console.log(err);
-      }
-    });
+  const hideData = () => $csvData.html("");
+
+  const refreshData = csvs => {
+    hideData();
+    csvs.forEach(csv => generateTableFromCSV(csv).appendTo($csvData));
   };
 
   const generateTableFromCSV = csv => {
-    $csvData.html("");
+    let $csvTable = $("<table>");
     let rows = csv.split("\n");
-    rows.forEach((row, index) => generateRow(row.split(","), index));
+    rows.forEach((row, index) =>
+      generateRow(row.split(","), index).appendTo($csvTable)
+    );
+    return $csvTable;
   };
 
   const generateRow = (fields, index) => {
-    let $heading = $("<tr>").appendTo($csvData);
+    let $heading = $("<tr>");
     fields.forEach(field => {
       let $field = $(index ? "<td>" : "<th>").text(field);
       $field.appendTo($heading);
     });
+    return $heading;
   };
+
+  $jsonFile.on("click", () => $jsonText.val(""));
+  $jsonText.on("click", () => $jsonFile.val(""));
+
+  $allData.on("click", () => {
+    retrieveCSVs();
+    $allData.toggle();
+    $noData.toggle();
+  });
+  $noData.on("click", () => {
+    hideData();
+    $allData.toggle();
+    $noData.toggle();
+  });
+
+  $jsonParser.on("submit", e => {
+    if ($jsonFile.get(0).files.length) {
+      parseFromFile();
+    } else {
+      $jsonText.html("");
+      uploadJSON($jsonText.val());
+    }
+    e.preventDefault();
+  });
 });
 
 const readAsTextAsync = file => {

@@ -54,7 +54,8 @@ hr {
 }
 
 #csv-data {
-  margin-top: 2rem;
+  position: absolute;
+  top: 45%;
   text-align: left;
 }
 

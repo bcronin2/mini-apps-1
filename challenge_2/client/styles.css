@@ -48,6 +48,11 @@ hr {
   width: 60%;
 }
 
+#json-submit {
+  color: lightgrey;
+  background-color: steelblue;
+}
+
 #csv-data {
   margin-top: 2rem;
   text-align: left;

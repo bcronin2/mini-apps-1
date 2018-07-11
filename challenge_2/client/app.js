@@ -2,6 +2,7 @@
 
 $(document).ready(() => {
   const endpoint = "/json";
+
   const $jsonParser = $("#json-parser");
   const $jsonFilter = $("#json-filter");
   const $jsonText = $("#json-text");

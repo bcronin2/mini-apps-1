@@ -53,10 +53,18 @@ body {
   flex-direction: column;
 }
 
+.col.allow {
+  cursor: pointer;
+}
+
+.col.allow:hover {
+  border: solid green 2px;
+}
+
 .cell {
   border: solid 1px black;
-  width: 1rem;
-  height: 1rem;
+  width: 2rem;
+  height: 2rem;
 }
 
 .cell.R {

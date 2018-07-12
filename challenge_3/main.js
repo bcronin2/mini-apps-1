@@ -1,5 +1,6 @@
 const express = require("express");
 const parser = require("body-parser");
+const controllers = require("./server/controllers.js");
 const port = process.env.PORT || 1024;
 
 const server = express();

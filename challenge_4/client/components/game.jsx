@@ -1,13 +1,14 @@
 const React = require("react");
 const Board = require("./board.jsx");
-const helpers = require("./boardHelpers.js");
+const Details = require("./gameDetails.jsx");
+const helpers = require("./gameHelpers.js");
 
 class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       N: 4,
-      grid: this.newGrid(7, 6),
+      grid: helpers.newGrid(7, 6),
       current: "R",
       turnCounter: 0
     };
@@ -30,7 +31,7 @@ class Game extends React.Component {
 
   startNewGame() {
     this.setState({
-      grid: this.newGrid(this.state.N + 3, this.state.N + 2),
+      grid: helpers.newGrid(this.state.N + 3, this.state.N + 2),
       height: this.state.N + 2,
       current: this.state.defender || "R",
       turnCounter: 0
@@ -89,116 +90,16 @@ class Game extends React.Component {
     callback(message);
   }
 
-  // checkCol(col, row) {
-  //   let counter = 1;
-  //   while (++row < this.state.grid[0].length) {
-  //     if (this.state.grid[col][row] !== this.state.current) {
-  //       break;
-  //     }
-  //     counter++;
-  //     if (counter >= this.state.N) {
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // }
-
-  // checkRow(col, row) {
-  //   let counter = 1;
-  //   let colLeft = col;
-  //   let colRight = col;
-  //   while (colLeft-- > 0) {
-  //     if (this.state.grid[colLeft][row] !== this.state.current) {
-  //       break;
-  //     }
-  //     counter++;
-  //     if (counter >= this.state.N) {
-  //       return true;
-  //     }
-  //   }
-  //   while (++colRight < this.state.grid.length) {
-  //     if (this.state.grid[colRight][row] !== this.state.current) {
-  //       break;
-  //     }
-  //     counter++;
-  //     if (counter >= this.state.N) {
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // }
-
-  // checkMajDiagonal(col, row) {
-  //   let counter = 1;
-  //   let colLeft = col;
-  //   let rowLeft = row;
-  //   let colRight = col;
-  //   let rowRight = row;
-  //   while (colLeft-- > 0 && rowLeft-- > 0) {
-  //     if (this.state.grid[colLeft][rowLeft] !== this.state.current) {
-  //       break;
-  //     }
-  //     counter++;
-  //     if (counter >= this.state.N) {
-  //       return true;
-  //     }
-  //   }
-  //   while (
-  //     ++colRight < this.state.grid.length &&
-  //     ++rowRight < this.state.grid[0].length
-  //   ) {
-  //     if (this.state.grid[colRight][rowRight] !== this.state.current) {
-  //       break;
-  //     }
-  //     counter++;
-  //     if (counter >= this.state.N) {
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // }
-
-  // checkMinDiagonal(col, row) {
-  //   let counter = 1;
-  //   let colLeft = col;
-  //   let rowLeft = row;
-  //   let colRight = col;
-  //   let rowRight = row;
-  //   while (colLeft-- > 0 && ++rowRight < this.state.grid[0].length) {
-  //     if (this.state.grid[colLeft][rowRight] !== this.state.current) {
-  //       break;
-  //     }
-  //     counter++;
-  //     if (counter >= this.state.N) {
-  //       return true;
-  //     }
-  //   }
-  //   while (++colRight < this.state.grid.length && rowLeft-- > 0) {
-  //     if (this.state.grid[colRight][rowLeft] !== this.state.current) {
-  //       break;
-  //     }
-  //     counter++;
-  //     if (counter >= this.state.N) {
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // }
-
-  newGrid(numCols, colHeight) {
-    let grid = [];
-    for (let i = 0; i < numCols; i++) {
-      grid.push([]);
-      for (let j = 0; j < colHeight; j++) {
-        grid[i][j] = null;
-      }
-    }
-    return grid;
-  }
-
   render() {
     return (
-      <Board grid={this.state.grid} handleClick={this.dropDisc.bind(this)} />
+      <div>
+        <Board grid={this.state.grid} handleClick={this.dropDisc.bind(this)} />
+        <Details
+          players={this.state.players}
+          current={this.state.current}
+          defender={this.state.defender}
+        />
+      </div>
     );
   }
 }

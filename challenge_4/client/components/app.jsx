@@ -13,10 +13,8 @@ class App extends React.Component {
         <div class="banner">
           <div>Connect N</div>
         </div>
-        <div class="content">
-          <div class="body">
-            <Game />
-          </div>
+        <div className="content">
+          <Game />
         </div>
       </div>
     );

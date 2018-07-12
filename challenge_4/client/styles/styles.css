@@ -31,21 +31,20 @@ body {
 }
 
 .content {
-  width: 60%;
+  width: fit-content;
   grid-row: content;
   margin: 2rem auto;
   box-shadow: var(--shadow);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-items: space-around;
   padding: 2rem;
 }
 
-.board {
-  margin: 1rem;
+.content > * {
   display: flex;
-  flex-direction: row;
+  padding: 1rem;
+}
+
+.board {
+  display: flex;
 }
 
 .col {
@@ -58,7 +57,7 @@ body {
 }
 
 .col.allow:hover {
-  border: solid green 2px;
+  border: solid black 2px;
 }
 
 .cell {
@@ -73,4 +72,29 @@ body {
 
 .cell.B {
   background-color: midnightblue;
+}
+
+.game-details {
+  border: solid 2px darkgrey;
+  border-radius: 0.2rem;
+  padding: 0.4rem 1.2rem 0.4rem 0.4rem;
+  margin-left: 3rem;
+  min-width: 10rem;
+}
+
+.R {
+  color: maroon;
+}
+
+.B {
+  color: midnightblue;
+}
+
+.title {
+  margin-bottom: 0.5rem;
+  font-weight: 800;
+}
+
+.bold {
+  font-weight: 800;
 }

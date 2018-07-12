@@ -17,7 +17,7 @@ module.exports = {
     let counter = 1;
     let colLeft = col;
     let colRight = col;
-    while (colLeft-- > 0) {
+    while (--colLeft >= 0) {
       if (ctx.grid[colLeft][row] !== ctx.current) {
         break;
       }
@@ -44,7 +44,7 @@ module.exports = {
     let rowLeft = row;
     let colRight = col;
     let rowRight = row;
-    while (colLeft-- > 0 && rowLeft-- > 0) {
+    while (--colLeft >= 0 && --rowLeft >= 0) {
       if (ctx.grid[colLeft][rowLeft] !== ctx.current) {
         break;
       }
@@ -71,7 +71,7 @@ module.exports = {
     let rowLeft = row;
     let colRight = col;
     let rowRight = row;
-    while (colLeft-- > 0 && ++rowRight < ctx.grid[0].length) {
+    while (--colLeft >= 0 && ++rowRight < ctx.grid[0].length) {
       if (ctx.grid[colLeft][rowRight] !== ctx.current) {
         break;
       }
@@ -80,7 +80,7 @@ module.exports = {
         return true;
       }
     }
-    while (++colRight < ctx.grid.length && rowLeft-- > 0) {
+    while (++colRight < ctx.grid.length && --rowLeft >= 0) {
       if (ctx.grid[colRight][rowLeft] !== ctx.current) {
         break;
       }
@@ -90,5 +90,16 @@ module.exports = {
       }
     }
     return false;
+  },
+
+  newGrid: function(numCols, colHeight) {
+    let grid = [];
+    for (let i = 0; i < numCols; i++) {
+      grid.push([]);
+      for (let j = 0; j < colHeight; j++) {
+        grid[i][j] = null;
+      }
+    }
+    return grid;
   }
 };

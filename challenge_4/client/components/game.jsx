@@ -7,14 +7,9 @@ class Game extends React.Component {
     this.state = {
       N: 4,
       grid: this.newGrid(7, 6),
-      height: 6,
       current: "R",
       turnCounter: 0
     };
-
-    // initialize game elements--dimensions, players, defender, current player, grid, winner, number of turns
-    // grid will be array of strings; max string length will be height, and number of strings will be width
-    // state will also need N-value - will generate dimensions/grid from this
   }
 
   componentWillMount() {
@@ -34,7 +29,7 @@ class Game extends React.Component {
 
   startNewGame() {
     this.setState({
-      grid: this.newGrid(this.state.N + 3),
+      grid: this.newGrid(this.state.N + 3, this.state.N + 2),
       height: this.state.N + 2,
       current: this.state.defender || "R",
       turnCounter: 0
@@ -44,7 +39,7 @@ class Game extends React.Component {
   dropDisc(col) {
     if (!this.state.grid[col][0]) {
       let row = 0;
-      while (!this.state.grid[col][row] && row < this.state.height) {
+      while (!this.state.grid[col][row] && row < this.state.grid[0].length) {
         row++;
       }
       this.state.grid[col][--row] = this.state.current;
@@ -66,7 +61,10 @@ class Game extends React.Component {
   endGame(message) {
     let newGame = confirm(message);
     if (newGame) {
-      this.startNewGame();
+      this.setState(
+        { defender: this.state.current },
+        this.startNewGame.bind(this)
+      );
     }
   }
 
@@ -78,10 +76,12 @@ class Game extends React.Component {
       this.checkMajDiagonal(col, row) ||
       this.checkMinDiagonal(col, row);
     if (isWinner) {
-      message = `${this.state.current} won! Play again?`;
+      message = `${
+        this.state.players[this.state.current].name
+      } won! Play again?`;
     } else if (
       this.state.turnCounter ===
-      this.state.height * this.state.grid.length
+      this.state.grid[0].length * this.state.grid.length
     ) {
       message = "The game was a draw! Play again?";
     }
@@ -90,7 +90,7 @@ class Game extends React.Component {
 
   checkCol(col, row) {
     let counter = 1;
-    while (++row < this.state.height) {
+    while (++row < this.state.grid[0].length) {
       if (this.state.grid[col][row] !== this.state.current) {
         break;
       }
@@ -128,13 +128,60 @@ class Game extends React.Component {
   }
 
   checkMajDiagonal(col, row) {
+    let counter = 1;
+    let colLeft = col;
+    let rowLeft = row;
+    let colRight = col;
+    let rowRight = row;
+    while (colLeft-- > 0 && rowLeft-- > 0) {
+      if (this.state.grid[colLeft][rowLeft] !== this.state.current) {
+        break;
+      }
+      counter++;
+      if (counter >= this.state.N) {
+        return true;
+      }
+    }
+    while (
+      ++colRight < this.state.grid.length &&
+      ++rowRight < this.state.grid[0].length
+    ) {
+      if (this.state.grid[colRight][rowRight] !== this.state.current) {
+        break;
+      }
+      counter++;
+      if (counter >= this.state.N) {
+        return true;
+      }
+    }
     return false;
-    // similar to checkRow, but diagonal (top left to bottom right)
   }
 
   checkMinDiagonal(col, row) {
+    let counter = 1;
+    let colLeft = col;
+    let rowLeft = row;
+    let colRight = col;
+    let rowRight = row;
+    while (colLeft-- > 0 && ++rowRight < this.state.grid[0].length) {
+      if (this.state.grid[colLeft][rowRight] !== this.state.current) {
+        break;
+      }
+      counter++;
+      if (counter >= this.state.N) {
+        return true;
+      }
+    }
+    while (++colRight < this.state.grid.length && rowLeft-- > 0) {
+      if (this.state.grid[colRight][rowLeft] !== this.state.current) {
+        break;
+      }
+      counter++;
+      if (counter >= this.state.N) {
+        return true;
+      }
+    }
     return false;
-    // similar to checkMajDiagonal, but in opposite direction
   }
 
   newGrid(numCols, colHeight) {
@@ -150,11 +197,7 @@ class Game extends React.Component {
 
   render() {
     return (
-      <Board
-        grid={this.state.grid}
-        height={this.state.height}
-        handleClick={this.dropDisc.bind(this)}
-      />
+      <Board grid={this.state.grid} handleClick={this.dropDisc.bind(this)} />
     );
   }
 }

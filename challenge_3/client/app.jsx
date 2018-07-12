@@ -31,7 +31,7 @@ class App extends React.Component {
   logIn() {}
 
   nextScreen() {
-    if (this.state.step > 0) {
+    if (1 <= this.state.step && this.state.step <= 3) {
       this.state.formData[this.state.step] = this.state.stepData;
       this.state.stepData = this.state.formData[this.state.step + 1] || {};
     }
@@ -39,6 +39,7 @@ class App extends React.Component {
   }
 
   prevScreen() {
+    this.state.formData[this.state.step] = this.state.stepData;
     this.state.stepData = this.state.formData[this.state.step - 1] || {};
     this.setState({ step: this.state.step - 1 });
   }
@@ -108,6 +109,23 @@ class App extends React.Component {
             {this.inputElement("card_number", "Card number")}
             {this.inputElement("ccv_number", "CCV")}
             {this.inputElement("expiration", "exp date")}
+          </div>
+          <div className="nav">
+            <button onClick={this.prevScreen.bind(this)}>Go back</button>
+            <button onClick={this.checkout.bind(this)}>Confirmation</button>
+          </div>
+        </div>
+      );
+    } else if (this.state.step === 4) {
+      return (
+        <div className="content">
+          <div className="title">Step 4: Confirm your details</div>
+          <div className="body">
+            {this.state.formData.map(stepData => {
+              if (stepData.length) {
+                return stepData.map(field => <div>{field}</div>);
+              }
+            })}
           </div>
           <div className="nav">
             <button onClick={this.prevScreen.bind(this)}>Go back</button>

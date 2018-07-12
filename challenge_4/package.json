@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "build": "webpack --mode production",
+    "start": "nodemon ./server/main.js"
   },
   "author": "",
   "license": "ISC",
@@ -18,7 +19,6 @@
     "css-loader": "^1.0.0",
     "nodemon": "^1.18.1",
     "style-loader": "^0.21.0",
-    "webpack": "^4.16.0",
     "webpack-cli": "^3.0.8"
   },
   "dependencies": {

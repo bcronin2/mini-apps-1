@@ -1,5 +1,6 @@
 const React = require("react");
 const Board = require("./board.jsx");
+const helpers = require("./boardHelpers.js");
 
 class Game extends React.Component {
   constructor(props) {
@@ -71,10 +72,10 @@ class Game extends React.Component {
   checkWinOrTie(col, row, callback) {
     let message = "";
     let isWinner =
-      this.checkCol(col, row) ||
-      this.checkRow(col, row) ||
-      this.checkMajDiagonal(col, row) ||
-      this.checkMinDiagonal(col, row);
+      helpers.checkCol(col, row, this.state) ||
+      helpers.checkRow(col, row, this.state) ||
+      helpers.checkMajDiagonal(col, row, this.state) ||
+      helpers.checkMinDiagonal(col, row, this.state);
     if (isWinner) {
       message = `${
         this.state.players[this.state.current].name
@@ -88,101 +89,101 @@ class Game extends React.Component {
     callback(message);
   }
 
-  checkCol(col, row) {
-    let counter = 1;
-    while (++row < this.state.grid[0].length) {
-      if (this.state.grid[col][row] !== this.state.current) {
-        break;
-      }
-      counter++;
-      if (counter >= this.state.N) {
-        return true;
-      }
-    }
-    return false;
-  }
+  // checkCol(col, row) {
+  //   let counter = 1;
+  //   while (++row < this.state.grid[0].length) {
+  //     if (this.state.grid[col][row] !== this.state.current) {
+  //       break;
+  //     }
+  //     counter++;
+  //     if (counter >= this.state.N) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
 
-  checkRow(col, row) {
-    let counter = 1;
-    let colLeft = col;
-    let colRight = col;
-    while (colLeft-- > 0) {
-      if (this.state.grid[colLeft][row] !== this.state.current) {
-        break;
-      }
-      counter++;
-      if (counter >= this.state.N) {
-        return true;
-      }
-    }
-    while (++colRight < this.state.grid.length) {
-      if (this.state.grid[colRight][row] !== this.state.current) {
-        break;
-      }
-      counter++;
-      if (counter >= this.state.N) {
-        return true;
-      }
-    }
-    return false;
-  }
+  // checkRow(col, row) {
+  //   let counter = 1;
+  //   let colLeft = col;
+  //   let colRight = col;
+  //   while (colLeft-- > 0) {
+  //     if (this.state.grid[colLeft][row] !== this.state.current) {
+  //       break;
+  //     }
+  //     counter++;
+  //     if (counter >= this.state.N) {
+  //       return true;
+  //     }
+  //   }
+  //   while (++colRight < this.state.grid.length) {
+  //     if (this.state.grid[colRight][row] !== this.state.current) {
+  //       break;
+  //     }
+  //     counter++;
+  //     if (counter >= this.state.N) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
 
-  checkMajDiagonal(col, row) {
-    let counter = 1;
-    let colLeft = col;
-    let rowLeft = row;
-    let colRight = col;
-    let rowRight = row;
-    while (colLeft-- > 0 && rowLeft-- > 0) {
-      if (this.state.grid[colLeft][rowLeft] !== this.state.current) {
-        break;
-      }
-      counter++;
-      if (counter >= this.state.N) {
-        return true;
-      }
-    }
-    while (
-      ++colRight < this.state.grid.length &&
-      ++rowRight < this.state.grid[0].length
-    ) {
-      if (this.state.grid[colRight][rowRight] !== this.state.current) {
-        break;
-      }
-      counter++;
-      if (counter >= this.state.N) {
-        return true;
-      }
-    }
-    return false;
-  }
+  // checkMajDiagonal(col, row) {
+  //   let counter = 1;
+  //   let colLeft = col;
+  //   let rowLeft = row;
+  //   let colRight = col;
+  //   let rowRight = row;
+  //   while (colLeft-- > 0 && rowLeft-- > 0) {
+  //     if (this.state.grid[colLeft][rowLeft] !== this.state.current) {
+  //       break;
+  //     }
+  //     counter++;
+  //     if (counter >= this.state.N) {
+  //       return true;
+  //     }
+  //   }
+  //   while (
+  //     ++colRight < this.state.grid.length &&
+  //     ++rowRight < this.state.grid[0].length
+  //   ) {
+  //     if (this.state.grid[colRight][rowRight] !== this.state.current) {
+  //       break;
+  //     }
+  //     counter++;
+  //     if (counter >= this.state.N) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
 
-  checkMinDiagonal(col, row) {
-    let counter = 1;
-    let colLeft = col;
-    let rowLeft = row;
-    let colRight = col;
-    let rowRight = row;
-    while (colLeft-- > 0 && ++rowRight < this.state.grid[0].length) {
-      if (this.state.grid[colLeft][rowRight] !== this.state.current) {
-        break;
-      }
-      counter++;
-      if (counter >= this.state.N) {
-        return true;
-      }
-    }
-    while (++colRight < this.state.grid.length && rowLeft-- > 0) {
-      if (this.state.grid[colRight][rowLeft] !== this.state.current) {
-        break;
-      }
-      counter++;
-      if (counter >= this.state.N) {
-        return true;
-      }
-    }
-    return false;
-  }
+  // checkMinDiagonal(col, row) {
+  //   let counter = 1;
+  //   let colLeft = col;
+  //   let rowLeft = row;
+  //   let colRight = col;
+  //   let rowRight = row;
+  //   while (colLeft-- > 0 && ++rowRight < this.state.grid[0].length) {
+  //     if (this.state.grid[colLeft][rowRight] !== this.state.current) {
+  //       break;
+  //     }
+  //     counter++;
+  //     if (counter >= this.state.N) {
+  //       return true;
+  //     }
+  //   }
+  //   while (++colRight < this.state.grid.length && rowLeft-- > 0) {
+  //     if (this.state.grid[colRight][rowLeft] !== this.state.current) {
+  //       break;
+  //     }
+  //     counter++;
+  //     if (counter >= this.state.N) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
 
   newGrid(numCols, colHeight) {
     let grid = [];

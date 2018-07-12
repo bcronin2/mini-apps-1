@@ -12,7 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "node-inspect": "^1.11.5"
   },
   "devDependencies": {
     "babel-preset-env": "^1.7.0",

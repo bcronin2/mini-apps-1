@@ -1,13 +1,11 @@
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      id: 0,
-      step: 0,
-      new: true,
-      stepData: {},
-      formData: new Array(4)
-    };
+    this.state = {};
+  }
+
+  componentDidMount() {
+    this.refresh();
   }
 
   componentDidUpdate() {
@@ -33,19 +31,20 @@ class App extends React.Component {
     }
   }
 
-  createAccount(callback) {
-    debugger;
-    let self = this;
-    window
-      .fetch(self.props.createUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json; charset=utf-8"
-        },
-        body: JSON.stringify(self.state.stepData)
-      })
-      .then(response => console.log(response))
-      .then(callback);
+  createAccount() {
+    postData(
+      this.props.createUrl,
+      this.state.stepData,
+      this.nextStep.bind(this)
+    );
+  }
+
+  checkout() {
+    postData(
+      this.props.submitUrl,
+      this.state.formData,
+      this.nextStep.bind(this)
+    );
   }
 
   nextStep() {
@@ -62,21 +61,20 @@ class App extends React.Component {
     this.setState({ step: this.state.step - 1 });
   }
 
-  checkout() {
-    // window.fetch();
-    this.nextStep();
+  refresh() {
+    this.setState({
+      id: 0,
+      step: 0,
+      new: true,
+      stepData: {},
+      formData: new Array(4)
+    });
   }
 
   render() {
     if (this.state.step === 0) {
       return (
-        <div className="content">
-          <div className="title">Welcome!!!</div>
-          <div className="body">Select what you'd like to purchase...</div>
-          <div className="nav">
-            <button onClick={this.nextStep.bind(this)}>Continue</button>
-          </div>
-        </div>
+
       );
     } else if (this.state.step === 1) {
       return (
@@ -93,10 +91,8 @@ class App extends React.Component {
           </div>
           <div className="nav">
             <button onClick={this.prevStep.bind(this)}>Nevermind.</button>
-            <button
-              onClick={() => this.createAccount(this.nextStep.bind(this))}
-            >
-              Continue
+            <button onClick={this.createAccount.bind(this)}>
+              Create account
             </button>
           </div>
         </div>
@@ -124,10 +120,10 @@ class App extends React.Component {
         <div className="content">
           <div className="title">Step 3: Enter payment info</div>
           <div className="body">
-            {this.inputElement("holder_name", "Cardholder's full name")}
+            {this.inputElement("card_holder", "Cardholder's full name")}
             {this.inputElement("card_number", "Card number")}
             {this.inputElement("ccv_number", "CCV")}
-            {this.inputElement("expiration", "exp date")}
+            {this.inputElement("expiration", "exp date", "date")}
           </div>
           <div className="nav">
             <button onClick={this.prevStep.bind(this)}>Go back</button>
@@ -161,9 +157,7 @@ class App extends React.Component {
           <div className="title">Thanks for your purchase!</div>
           <div className="body">You just bought some stuff.</div>
           <div className="nav">
-            <button onClick={() => this.setState({ step: 0 })}>
-              Go back home
-            </button>
+            <button onClick={this.refresh.bind(this)}>Go back home</button>
           </div>
         </div>
       );
@@ -193,5 +187,7 @@ App.defaultProps = {
     3: "cards"
   }
 };
+
+
 
 ReactDOM.render(<App />, document.getElementById("app"));

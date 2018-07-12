@@ -7,11 +7,15 @@ CREATE TABLE accounts
   id INTEGER NOT NULL
   AUTO_INCREMENT,
   username VARCHAR
-  (32) UNIQUE,
+  (32) NOT NULL,
   email VARCHAR
-  (32) UNIQUE,
+  (32) NOT NULL,
   password INT
   (32),
+  UNIQUE KEY
+  (`username`),
+    UNIQUE KEY
+  (`email`),
   PRIMARY KEY
   (`id`)
 );
@@ -48,7 +52,7 @@ CREATE TABLE accounts
       id INTEGER NOT NULL
       AUTO_INCREMENT,
   account_id INTEGER NOT NULL,
-  holder_name VARCHAR
+  card_holder VARCHAR
       (32),
   card_number INTEGER
       (19),

@@ -12,7 +12,7 @@ class App extends React.Component {
     let inputs = document.getElementsByTagName("input");
     if (inputs.length) {
       for (let i = 0; i < inputs.length; i++) {
-        let prefillData = this.state.formData[this.state.step];
+        let prefillData = this.state.formData[this.state.stepIndex];
         inputs[i].value =
           prefillData && prefillData[inputs[i].id]
             ? prefillData[inputs[i].id]
@@ -165,16 +165,6 @@ App.defaultProps = {
   }
 };
 
-let HomePage = props => (
-  <div className="content">
-    <div className="title">Welcome!!!</div>
-    <div className="body">Select what you'd like to purchase...</div>
-    <div className="nav">
-      <button onClick={props.next}>Continue</button>
-    </div>
-  </div>
-);
-
 let FormStep = props => (
   <div className="content">
     <div className="title">{props.title}</div>
@@ -185,6 +175,16 @@ let FormStep = props => (
     </div>
     <div className="nav">
       {props.navs.map(nav => <button onClick={nav.action}>{nav.name}</button>)}
+    </div>
+  </div>
+);
+
+let HomePage = props => (
+  <div className="content">
+    <div className="title">Welcome!!!</div>
+    <div className="body">Select what you'd like to purchase...</div>
+    <div className="nav">
+      <button onClick={props.next}>Continue</button>
     </div>
   </div>
 );

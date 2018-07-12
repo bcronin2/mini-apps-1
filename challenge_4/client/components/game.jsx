@@ -63,38 +63,77 @@ class Game extends React.Component {
     }
   }
 
-  endGame(message) {}
+  endGame(message) {
+    let newGame = confirm(message);
+    if (newGame) {
+      this.startNewGame();
+    }
+  }
 
-  checkWinOrTie(col, row, cb) {
-    cb("");
-    // return checkCol || checkRow || checkMajDiagonal || checkMinDiagonal
+  checkWinOrTie(col, row, callback) {
+    let message = "";
+    let isWinner =
+      this.checkCol(col, row) ||
+      this.checkRow(col, row) ||
+      this.checkMajDiagonal(col, row) ||
+      this.checkMinDiagonal(col, row);
+    if (isWinner) {
+      message = `${this.state.current} won! Play again?`;
+    } else if (
+      this.state.turnCounter ===
+      this.state.height * this.state.grid.length
+    ) {
+      message = "The game was a draw! Play again?";
+    }
+    callback(message);
   }
 
   checkCol(col, row) {
-    // initialize consec counter
-    // look down until...
-    //// you reach the bottom
-    //// next !== current
-    //// you've found N consecutive equal to current
+    let counter = 1;
+    while (++row < this.state.height) {
+      if (this.state.grid[col][row] !== this.state.current) {
+        break;
+      }
+      counter++;
+      if (counter >= this.state.N) {
+        return true;
+      }
+    }
+    return false;
   }
 
   checkRow(col, row) {
-    // initialize consec counter
-    //// look to the left until...
-    //// you reach undefined
-    //// next !== current
-    // you've found N consecutive equal to current
-    //// look to the right until...
-    //// you reach undefined
-    //// next !== current
-    //// you've found N consecutive equal to current
+    let counter = 1;
+    let colLeft = col;
+    let colRight = col;
+    while (colLeft-- > 0) {
+      if (this.state.grid[colLeft][row] !== this.state.current) {
+        break;
+      }
+      counter++;
+      if (counter >= this.state.N) {
+        return true;
+      }
+    }
+    while (++colRight < this.state.grid.length) {
+      if (this.state.grid[colRight][row] !== this.state.current) {
+        break;
+      }
+      counter++;
+      if (counter >= this.state.N) {
+        return true;
+      }
+    }
+    return false;
   }
 
   checkMajDiagonal(col, row) {
+    return false;
     // similar to checkRow, but diagonal (top left to bottom right)
   }
 
   checkMinDiagonal(col, row) {
+    return false;
     // similar to checkMajDiagonal, but in opposite direction
   }
 

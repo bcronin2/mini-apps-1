@@ -4,15 +4,32 @@ const Board = require("./board.jsx");
 class Game extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {};
     // initialize game elements--dimensions, players, defender, current player, grid, winner, number of turns
     // grid will be array of strings; max string length will be height, and number of strings will be width
     // state will also need N-value - will generate dimensions/grid from this
   }
 
+  componentDidMount() {
+    this.startGame();
+  }
+
+  startGame() {
+    // get player names
+    // set default N, dimensions
+    // initialize
+    //// grid
+    //// defender/current player
+    //// turnCounter
+  }
+
+  endGame(message) {}
+
   dropDisc(col) {
     // click handler for board (only call if you can drop a disc)
     // updates grid for given column, and updates number of turns, using setState
     // in callback, checks if there is a winner, or if there is a tie, and switches current player
+    //// if the game is over, send a message to endGame
   }
 
   checkWinner(col, row) {

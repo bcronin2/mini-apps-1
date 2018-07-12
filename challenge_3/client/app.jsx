@@ -22,8 +22,10 @@ class App extends React.Component {
     }
   }
 
-  handleChange(fieldId) {
-    let fieldValue = document.getElementById(fieldId).value;
+  handleChange(event) {
+    let element = event.target;
+    let fieldValue = element.value;
+    let fieldId = element.id;
     if (fieldId === "password") {
       this.state.stepData[fieldId] = fieldValue.hashCode();
     } else {
@@ -48,108 +50,95 @@ class App extends React.Component {
   }
 
   nextStep() {
-    if (1 <= this.state.step && this.state.step <= 3) {
-      this.state.formData[this.state.step] = this.state.stepData;
-      this.state.stepData = this.state.formData[this.state.step + 1] || {};
+    if (this.props.stepNames[this.state.step]) {
+      this.state.formData[this.state.stepName] = this.state.stepData;
     }
-    this.setState({ step: this.state.step + 1 });
+    this.setStep(this.state.stepIndex + 1);
   }
 
   prevStep() {
-    this.state.formData[this.state.step] = this.state.stepData;
-    this.state.stepData = this.state.formData[this.state.step - 1] || {};
-    this.setState({ step: this.state.step - 1 });
+    this.state.formData[this.state.stepName] = this.state.stepData;
+    this.setStep(this.state.stepIndex - 1);
+  }
+
+  setStep(index) {
+    this.setState(
+      { stepIndex: index, stepName: this.props.stepNames[index] },
+      () =>
+        (this.state.stepData = this.state.formData[this.state.stepName] || {})
+    );
   }
 
   refresh() {
     this.setState({
       id: 0,
-      step: 0,
-      new: true,
+      stepIndex: 0,
+      stepName: "",
       stepData: {},
-      formData: new Array(4)
+      formData: {}
     });
   }
 
   render() {
-    if (this.state.step === 0) {
+    if (this.state.stepIndex === 0) {
+      return <HomePage next={this.nextStep.bind(this)} />;
+    } else if (this.state.stepIndex === 1) {
       return (
-
+        <FormStep
+          title="Step 1: Create account"
+          fields={[
+            { id: "username", text: "Username" },
+            { id: "email", text: "Email address" },
+            { id: "password", text: "Password" }
+          ]}
+          navs={[
+            { action: this.prevStep.bind(this), name: "Never mind" },
+            { action: this.nextStep.bind(this), name: "Continue" }
+          ]}
+        />
       );
-    } else if (this.state.step === 1) {
+    } else if (this.state.stepIndex === 2) {
       return (
-        <div className="content">
-          <div className="title">Step 1: Sign up</div>
-          <div className="body">
-            {this.inputElement(
-              "username",
-              "Enter a username...",
-              this.state.stepData
-            )}
-            {this.inputElement("email", "Enter your email...")}
-            {this.inputElement("password", "Enter a password...", "password")}
-          </div>
-          <div className="nav">
-            <button onClick={this.prevStep.bind(this)}>Nevermind.</button>
-            <button onClick={this.createAccount.bind(this)}>
-              Create account
-            </button>
-          </div>
-        </div>
+        <FormStep
+          title="Step 2: Enter address"
+          fields={[
+            { id: "name", text: "Recipient's full name" },
+            { id: "street_1", text: "Street address 1" },
+            { id: "street_2", text: "Street address 2 (optional)" },
+            { id: "city", text: "City" },
+            { id: "state", text: "State" },
+            { id: "zip", text: "Zip code" }
+          ]}
+          navs={[
+            { action: this.prevStep.bind(this), name: "Go back" },
+            { action: this.nextStep.bind(this), name: "Continue" }
+          ]}
+        />
       );
-    } else if (this.state.step === 2) {
+    } else if (this.state.stepIndex === 3) {
       return (
-        <div className="content">
-          <div className="title">Step 2: Enter address</div>
-          <div className="body">
-            {this.inputElement("name", "Recipient's full name")}
-            {this.inputElement("street_1", "Street address 1")}
-            {this.inputElement("street_2", "Street address 2 (optional)")}
-            {this.inputElement("city", "City")}
-            {this.inputElement("state", "State")}
-            {this.inputElement("zip", "Zip code")}
-          </div>
-          <div className="nav">
-            <button onClick={this.prevStep.bind(this)}>Go back</button>
-            <button onClick={this.nextStep.bind(this)}>Continue</button>
-          </div>
-        </div>
+        <FormStep
+          title="Step 3: Enter payment info"
+          fields={[
+            { id: "card_holder", text: "Cardholder's full name" },
+            { id: "card_number", text: "Card number" },
+            { id: "ccv_number", text: "CCV" },
+            { id: "expiration", text: "Exp date" }
+          ]}
+          navs={[
+            { action: this.prevStep.bind(this), name: "Go back" },
+            { action: this.nextStep.bind(this), name: "Confirmation" }
+          ]}
+        />
       );
-    } else if (this.state.step === 3) {
+    } else if (this.state.stepIndex === 4) {
       return (
-        <div className="content">
-          <div className="title">Step 3: Enter payment info</div>
-          <div className="body">
-            {this.inputElement("card_holder", "Cardholder's full name")}
-            {this.inputElement("card_number", "Card number")}
-            {this.inputElement("ccv_number", "CCV")}
-            {this.inputElement("expiration", "exp date", "date")}
-          </div>
-          <div className="nav">
-            <button onClick={this.prevStep.bind(this)}>Go back</button>
-            <button onClick={this.nextStep.bind(this)}>Confirmation</button>
-          </div>
-        </div>
-      );
-    } else if (this.state.step === 4) {
-      return (
-        <div className="content">
-          <div className="title">Step 4: Confirm your details</div>
-          <div className="body">
-            {this.state.formData.map(stepData => {
-              if (stepData.length) {
-                return Object.keys(stepData).map(field => (
-                  <div>{stepData[field]}</div>
-                ));
-              }
-            })}
-            {console.log(this.state.formData)}
-          </div>
-          <div className="nav">
-            <button onClick={this.prevStep.bind(this)}>Go back</button>
-            <button onClick={this.checkout.bind(this)}>Purchase!</button>
-          </div>
-        </div>
+        <Confirmation
+          next={this.nextStep.bind(this)}
+          prev={this.prevStep.bind(this)}
+          handleChange={this.handleChange.bind(this)}
+          data={this.state.formData}
+        />
       );
     } else {
       return (
@@ -162,18 +151,6 @@ class App extends React.Component {
         </div>
       );
     }
-  }
-
-  inputElement(id, placeholder, type) {
-    return (
-      <input
-        id={id}
-        // value={this.state.stepData ? this.state.stepData[id] : ""}
-        placeholder={placeholder}
-        onChange={() => this.handleChange(id)}
-        type={type ? type : "text"}
-      />
-    );
   }
 }
 
@@ -188,6 +165,47 @@ App.defaultProps = {
   }
 };
 
+let HomePage = props => (
+  <div className="content">
+    <div className="title">Welcome!!!</div>
+    <div className="body">Select what you'd like to purchase...</div>
+    <div className="nav">
+      <button onClick={props.next}>Continue</button>
+    </div>
+  </div>
+);
 
+let FormStep = props => (
+  <div className="content">
+    <div className="title">{props.title}</div>
+    <div className="body">
+      {props.fields.map(field =>
+        createInput(field.id, field.text, field.type, props.handleChange)
+      )}
+    </div>
+    <div className="nav">
+      {props.navs.map(nav => <button onClick={nav.action}>{nav.name}</button>)}
+    </div>
+  </div>
+);
+
+let Confirmation = props => (
+  <div className="content">
+    <div className="title">Step 4: Confirm your details</div>
+    <div className="body">
+      {props.data.map(stepData => {
+        if (stepData.length) {
+          return Object.keys(stepData).map(field => (
+            <div>{stepData[field]}</div>
+          ));
+        }
+      })}
+    </div>
+    <div className="nav">
+      <button onClick={props.prev}>Go back</button>
+      <button onClick={props.next}>Purchase!</button>
+    </div>
+  </div>
+);
 
 ReactDOM.render(<App />, document.getElementById("app"));

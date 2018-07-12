@@ -23,3 +23,12 @@ const postData = (url, data, callback) => {
     .then(response => console.log(response))
     .then(callback);
 };
+
+const createInput = (id, placeholder, handleChange, type) => (
+  <input
+    id={id}
+    placeholder={placeholder}
+    onChange={handleChange}
+    type={type ? type : "text"}
+  />
+);

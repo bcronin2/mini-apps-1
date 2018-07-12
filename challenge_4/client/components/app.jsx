@@ -1,5 +1,5 @@
 const React = require("react");
-// import { MovieList } from "./MovieList.jsx";
+const Game = require("./game.jsx");
 // import { Search } from "./Search.jsx";
 // import { Filter } from "./Filter.jsx";
 // import { FindAndAdd } from "./FindAndAdd.jsx";
@@ -14,7 +14,10 @@ class App extends React.Component {
           <div>Connect N</div>
         </div>
         <div class="content">
-          <div class="body">Content goes here</div>
+          <div class="body">
+            Content goes here
+            <Game />
+          </div>
         </div>
       </div>
     );

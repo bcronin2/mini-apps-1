@@ -25,12 +25,30 @@ class App extends React.Component {
   }
 
   handleChange(fieldId) {
-    this.state.stepData[fieldId] = document.getElementById(fieldId).value;
+    let fieldValue = document.getElementById(fieldId).value;
+    if (fieldId === "password") {
+      this.state.stepData[fieldId] = fieldValue.hashCode();
+    } else {
+      this.state.stepData[fieldId] = fieldValue;
+    }
   }
 
-  logIn() {}
+  createAccount(callback) {
+    debugger;
+    let self = this;
+    window
+      .fetch(self.props.createUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        body: JSON.stringify(self.state.stepData)
+      })
+      .then(response => console.log(response))
+      .then(callback);
+  }
 
-  nextScreen() {
+  nextStep() {
     if (1 <= this.state.step && this.state.step <= 3) {
       this.state.formData[this.state.step] = this.state.stepData;
       this.state.stepData = this.state.formData[this.state.step + 1] || {};
@@ -38,28 +56,25 @@ class App extends React.Component {
     this.setState({ step: this.state.step + 1 });
   }
 
-  prevScreen() {
+  prevStep() {
     this.state.formData[this.state.step] = this.state.stepData;
     this.state.stepData = this.state.formData[this.state.step - 1] || {};
     this.setState({ step: this.state.step - 1 });
   }
 
   checkout() {
-    // this.postData(this.state.data);
-    this.nextScreen();
+    // window.fetch();
+    this.nextStep();
   }
 
   render() {
-    let content;
-    let next = <button onClick={this.nextScreen.bind(this)}>Next</button>;
-    let prev = <button onClick={this.prevScreen.bind(this)}>Next</button>;
     if (this.state.step === 0) {
       return (
         <div className="content">
           <div className="title">Welcome!!!</div>
           <div className="body">Select what you'd like to purchase...</div>
           <div className="nav">
-            <button onClick={this.nextScreen.bind(this)}>Continue</button>
+            <button onClick={this.nextStep.bind(this)}>Continue</button>
           </div>
         </div>
       );
@@ -77,8 +92,12 @@ class App extends React.Component {
             {this.inputElement("password", "Enter a password...", "password")}
           </div>
           <div className="nav">
-            <button onClick={this.prevScreen.bind(this)}>Nevermind.</button>
-            <button onClick={this.nextScreen.bind(this)}>Continue</button>
+            <button onClick={this.prevStep.bind(this)}>Nevermind.</button>
+            <button
+              onClick={() => this.createAccount(this.nextStep.bind(this))}
+            >
+              Continue
+            </button>
           </div>
         </div>
       );
@@ -95,8 +114,8 @@ class App extends React.Component {
             {this.inputElement("zip", "Zip code")}
           </div>
           <div className="nav">
-            <button onClick={this.prevScreen.bind(this)}>Go back</button>
-            <button onClick={this.nextScreen.bind(this)}>Continue</button>
+            <button onClick={this.prevStep.bind(this)}>Go back</button>
+            <button onClick={this.nextStep.bind(this)}>Continue</button>
           </div>
         </div>
       );
@@ -111,8 +130,8 @@ class App extends React.Component {
             {this.inputElement("expiration", "exp date")}
           </div>
           <div className="nav">
-            <button onClick={this.prevScreen.bind(this)}>Go back</button>
-            <button onClick={this.checkout.bind(this)}>Confirmation</button>
+            <button onClick={this.prevStep.bind(this)}>Go back</button>
+            <button onClick={this.nextStep.bind(this)}>Confirmation</button>
           </div>
         </div>
       );
@@ -123,12 +142,15 @@ class App extends React.Component {
           <div className="body">
             {this.state.formData.map(stepData => {
               if (stepData.length) {
-                return stepData.map(field => <div>{field}</div>);
+                return Object.keys(stepData).map(field => (
+                  <div>{stepData[field]}</div>
+                ));
               }
             })}
+            {console.log(this.state.formData)}
           </div>
           <div className="nav">
-            <button onClick={this.prevScreen.bind(this)}>Go back</button>
+            <button onClick={this.prevStep.bind(this)}>Go back</button>
             <button onClick={this.checkout.bind(this)}>Purchase!</button>
           </div>
         </div>
@@ -162,6 +184,9 @@ class App extends React.Component {
 }
 
 App.defaultProps = {
+  createUrl: "/create",
+  validateUrl: "/validate",
+  submitUrl: "/submit",
   stepNames: {
     1: "accounts",
     2: "addresses",

@@ -10,7 +10,7 @@ CREATE TABLE accounts
   (32) UNIQUE,
   email VARCHAR
   (32) UNIQUE,
-  password VARCHAR
+  password INT
   (32),
   PRIMARY KEY
   (`id`)

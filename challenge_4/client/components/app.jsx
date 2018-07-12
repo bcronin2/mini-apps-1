@@ -15,7 +15,6 @@ class App extends React.Component {
         </div>
         <div class="content">
           <div class="body">
-            Content goes here
             <Game />
           </div>
         </div>

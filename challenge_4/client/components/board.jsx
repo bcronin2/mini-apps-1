@@ -1,14 +1,20 @@
 const React = require("react");
+const PropTypes = require("prop-types");
 
 const Board = props => (
   <div>
-    {/* needs to take in 'height' and grid' props */}
-    {/* iterate through grid and create cell for given status */}
-    {/* height is necessary for empty top part of grid */}
-    {/* will also need a 'clickHandler' property for each column */}
+    <div className="board">
+      {props.grid.map((col, idx) => (
+        <div className="col" onClick={() => props.handleClick(idx)}>
+          {col.map(cell => <div className={`cell ${cell ? cell : ""}`} />)}
+        </div>
+      ))}
+    </div>
   </div>
 );
 
-Board.defaultProps = {};
+Board.propTypes = {
+  results: PropTypes.array.isRequired
+};
 
 module.exports = Board;

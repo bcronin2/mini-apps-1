@@ -10,7 +10,7 @@ class Game extends React.Component {
     this.state = {
       N: 4,
       grid: helpers.newGrid(7, 6),
-      current: 0,
+      current: "R",
       turnCounter: 0,
       defender: null
     };
@@ -25,31 +25,27 @@ class Game extends React.Component {
     let playerB = prompt("Name of Player 2:");
     this.setState({
       players: {
-        0: { name: playerR, wins: 0 },
-        1: { name: playerB, wins: 0 }
+        R: { name: playerR, wins: 0 },
+        B: { name: playerB, wins: 0 }
       }
     });
   }
 
   startNewGame() {
-    debugger;
     this.setState({
       grid: helpers.newGrid(this.state.N + 3, this.state.N + 2),
-      current: this.state.defender === null ? 0 : this.state.defender,
+      current: this.state.defender || "R",
       turnCounter: 0
     });
   }
 
   dropDisc(col) {
     let row = 0;
-    while (
-      this.state.grid[col][row] === null &&
-      row < this.state.grid[0].length
-    ) {
+    while (!this.state.grid[col][row] && row < this.state.grid[0].length) {
       row++;
     }
     let updatedGrid = this.state.grid.slice();
-    updatedGrid[col][--row] = this.state.current ? "B" : "R";
+    updatedGrid[col][--row] = this.state.current;
     this.setState({ grid: updatedGrid }, () =>
       this.checkWinOrTie(col, row, this.endTurn.bind(this))
     );
@@ -61,7 +57,7 @@ class Game extends React.Component {
     } else {
       this.setState({
         turnCounter: this.state.turnCounter + 1,
-        current: this.state.current ? 0 : 1
+        current: this.state.current === "R" ? "B" : "R"
       });
     }
   }

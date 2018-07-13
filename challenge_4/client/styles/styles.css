@@ -8,6 +8,10 @@ body {
   font-family: sans-serif;
 }
 
+buton {
+  cursor: pointer;
+}
+
 #app {
   display: grid;
   grid-template-rows: auto [banner] auto [content];

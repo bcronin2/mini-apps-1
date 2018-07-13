@@ -1,9 +1,8 @@
 module.exports = {
   checkCol: function(col, row, state) {
     let counter = 1;
-    let current = state.current ? "R" : "B";
     while (++row < state.grid[0].length) {
-      if (state.grid[col][row] !== current) {
+      if (state.grid[col][row] !== state.current) {
         break;
       }
       counter++;
@@ -18,9 +17,8 @@ module.exports = {
     let counter = 1;
     let colLeft = col;
     let colRight = col;
-    let current = state.current ? "R" : "B";
     while (--colLeft >= 0) {
-      if (state.grid[colLeft][row] !== current) {
+      if (state.grid[colLeft][row] !== state.current) {
         break;
       }
       counter++;
@@ -29,7 +27,7 @@ module.exports = {
       }
     }
     while (++colRight < state.grid.length) {
-      if (state.grid[colRight][row] !== current) {
+      if (state.grid[colRight][row] !== state.current) {
         break;
       }
       counter++;
@@ -46,9 +44,8 @@ module.exports = {
     let rowLeft = row;
     let colRight = col;
     let rowRight = row;
-    let current = state.current ? "R" : "B";
     while (--colLeft >= 0 && --rowLeft >= 0) {
-      if (state.grid[colLeft][rowLeft] !== current) {
+      if (state.grid[colLeft][rowLeft] !== state.current) {
         break;
       }
       counter++;
@@ -60,7 +57,7 @@ module.exports = {
       ++colRight < state.grid.length &&
       ++rowRight < state.grid[0].length
     ) {
-      if (state.grid[colRight][rowRight] !== current) {
+      if (state.grid[colRight][rowRight] !== state.current) {
         break;
       }
       counter++;
@@ -77,9 +74,8 @@ module.exports = {
     let rowLeft = row;
     let colRight = col;
     let rowRight = row;
-    let current = state.current ? "R" : "B";
     while (--colLeft >= 0 && ++rowRight < state.grid[0].length) {
-      if (state.grid[colLeft][rowRight] !== current) {
+      if (state.grid[colLeft][rowRight] !== state.current) {
         break;
       }
       counter++;
@@ -88,7 +84,7 @@ module.exports = {
       }
     }
     while (++colRight < state.grid.length && --rowLeft >= 0) {
-      if (state.grid[colRight][rowLeft] !== current) {
+      if (state.grid[colRight][rowLeft] !== state.current) {
         break;
       }
       counter++;
@@ -111,9 +107,11 @@ module.exports = {
   },
 
   saveGame: function(state, callback) {
+    let winner = state.current;
+    let loser = winner === "R" ? "B" : "R";
     let data = {
-      winner: state.players[state.current].name,
-      loser: state.players[(state.current + 1) % 2].name,
+      winner: state.players[winner].name,
+      loser: state.players[loser].name,
       finalBoard: state.grid
     };
     window

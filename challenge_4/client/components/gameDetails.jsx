@@ -3,7 +3,7 @@ const React = require("react");
 const Details = props => {
   let defender = "";
   let records = "";
-  if (props.defender) {
+  if (props.defender !== null) {
     defender = (
       <div>
         <div className="title">Reigning champ</div>
@@ -13,15 +13,15 @@ const Details = props => {
       </div>
     );
   }
-  if (props.players[0].wins || props.players[1].wins) {
+  if (props.players["R"].wins || props.players["B"].wins) {
     records = (
       <div>
         <div className="title">Records</div>
         <div className="R">
-          {props.players[0].name} wins: {props.players[0].wins}
+          {props.players["R"].name} wins: {props.players["R"].wins}
         </div>
         <div className="B">
-          {props.players[1].name} wins: {props.players[1].wins}
+          {props.players["B"].name} wins: {props.players["B"].wins}
         </div>
       </div>
     );
@@ -30,11 +30,11 @@ const Details = props => {
     <div className="game-details">
       <div>
         <div className="title">Players</div>
-        <div className={`R ${props.current === 0 ? "bold" : ""}`}>
-          Red: {props.players[0].name}
+        <div className={`R ${props.current === "R" ? "bold" : ""}`}>
+          Red: {props.players["R"].name}
         </div>
-        <div className={`B ${props.current === 1 ? "bold" : ""}`}>
-          Black: {props.players[1].name}
+        <div className={`B ${props.current === "B" ? "bold" : ""}`}>
+          Black: {props.players["B"].name}
         </div>
       </div>
       <hr />

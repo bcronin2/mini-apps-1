@@ -13,15 +13,15 @@ const Details = props => {
       </div>
     );
   }
-  if (props.players["R"].wins || props.players["B"].wins) {
+  if (props.players[0].wins || props.players[1].wins) {
     records = (
       <div>
         <div className="title">Records</div>
-        <div className="B">
-          {props.players["R"].name} wins: {props.players["R"].wins}
+        <div className="R">
+          {props.players[0].name} wins: {props.players[0].wins}
         </div>
         <div className="B">
-          {props.players["B"].name} wins: {props.players["B"].wins}
+          {props.players[1].name} wins: {props.players[1].wins}
         </div>
       </div>
     );
@@ -30,11 +30,11 @@ const Details = props => {
     <div className="game-details">
       <div>
         <div className="title">Players</div>
-        <div className={`R ${props.current === "R" ? "bold" : ""}`}>
-          Red: {props.players["R"].name}
+        <div className={`R ${props.current === 0 ? "bold" : ""}`}>
+          Red: {props.players[0].name}
         </div>
-        <div className={`B ${props.current === "B" ? "bold" : ""}`}>
-          Black: {props.players["B"].name}
+        <div className={`B ${props.current === 1 ? "bold" : ""}`}>
+          Black: {props.players[1].name}
         </div>
       </div>
       <hr />

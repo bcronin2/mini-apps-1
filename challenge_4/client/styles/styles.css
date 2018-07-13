@@ -38,6 +38,17 @@ body {
   padding: 4rem;
 }
 
+.menu-list > * {
+  font-size: 2rem;
+  margin: 1rem;
+  cursor: pointer;
+}
+
+.menu-list > *:hover {
+  font-weight: 800;
+  color: steelblue;
+}
+
 .game {
   width: fit-content;
   display: grid;
@@ -53,6 +64,7 @@ body {
 }
 
 .col {
+  height: fit-content;
   z-index: 100;
   border: solid black 1px;
   display: flex;

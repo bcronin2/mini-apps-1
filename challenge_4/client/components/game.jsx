@@ -119,6 +119,4 @@ class Game extends React.Component {
   }
 }
 
-Game.defaultProps = {};
-
 module.exports = Game;

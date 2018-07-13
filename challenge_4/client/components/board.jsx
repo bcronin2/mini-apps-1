@@ -1,5 +1,4 @@
 const React = require("react");
-const PropTypes = require("prop-types");
 
 const Board = props => (
   <div className="board">
@@ -13,9 +12,5 @@ const Board = props => (
     ))}
   </div>
 );
-
-Board.propTypes = {
-  results: PropTypes.array.isRequired
-};
 
 module.exports = Board;

@@ -35,19 +35,25 @@ body {
   grid-row: content;
   margin: 2rem auto;
   box-shadow: var(--shadow);
-  padding: 2rem;
+  padding: 4rem 2rem;
 }
 
-.content > * {
-  display: flex;
-  padding: 1rem;
+.game {
+  width: 50rem;
+  display: grid;
+  grid-template-columns: [board] 60% [details] 40%;
+  grid-template-rows: [info] auto [controls] auto;
 }
 
 .board {
+  grid-column: board;
+  justify-self: center;
   display: flex;
 }
 
 .col {
+  z-index: 100;
+  border: solid black 1px;
   display: flex;
   flex-direction: column;
 }
@@ -57,7 +63,7 @@ body {
 }
 
 .col.allow:hover {
-  border: solid black 2px;
+  border: solid yellow 1px;
 }
 
 .cell {
@@ -75,6 +81,7 @@ body {
 }
 
 .game-details {
+  grid-column: details;
   border: solid 2px darkgrey;
   border-radius: 0.2rem;
   padding: 0.4rem 1.2rem 0.4rem 0.4rem;
@@ -97,4 +104,13 @@ body {
 
 .bold {
   font-weight: 800;
+}
+
+.controls {
+  grid-row: controls;
+  grid-column-start: 1;
+  grid-column-end: 3;
+  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
 }

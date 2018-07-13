@@ -1,6 +1,7 @@
 const React = require("react");
 const Board = require("./board.jsx");
 const Details = require("./gameDetails.jsx");
+const Controls = require("./gameControls.jsx");
 const helpers = require("./gameHelpers.js");
 
 class Game extends React.Component {
@@ -32,7 +33,6 @@ class Game extends React.Component {
   startNewGame() {
     this.setState({
       grid: helpers.newGrid(this.state.N + 3, this.state.N + 2),
-      height: this.state.N + 2,
       current: this.state.defender || "R",
       turnCounter: 0
     });
@@ -70,6 +70,11 @@ class Game extends React.Component {
     }
   }
 
+  setN() {
+    let newN = parseInt(prompt("New number to connect:")) || 4;
+    this.setState({ N: newN }, this.startNewGame.bind(this));
+  }
+
   checkWinOrTie(col, row, callback) {
     let message = "";
     let isWinner =
@@ -92,12 +97,17 @@ class Game extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="game">
         <Board grid={this.state.grid} handleClick={this.dropDisc.bind(this)} />
         <Details
           players={this.state.players}
           current={this.state.current}
           defender={this.state.defender}
+        />
+        <Controls
+          turnCounter={this.state.turnCounter}
+          startNewGame={this.startNewGame.bind(this)}
+          setN={this.setN.bind(this)}
         />
       </div>
     );

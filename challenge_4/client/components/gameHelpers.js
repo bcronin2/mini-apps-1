@@ -106,7 +106,7 @@ module.exports = {
     return grid;
   },
 
-  saveGame: function(state, callback) {
+  finalizeGame: function(state, callback) {
     let winner = state.current;
     let loser = winner === "R" ? "B" : "R";
     let data = {
@@ -122,7 +122,7 @@ module.exports = {
         },
         body: JSON.stringify(data)
       })
-      .then(response => console.log(response))
-      .then(callback);
+      .then(response => response)
+      .then(response => console.log(JSON.stringify(response.body.toString)));
   }
 };

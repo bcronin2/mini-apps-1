@@ -63,7 +63,7 @@ class Game extends React.Component {
   }
 
   endGame(message) {
-    helpers.saveGame(this.state);
+    helpers.finalizeGame(this.state);
 
     let players = Object.assign({}, this.state.players);
     players[this.state.current].wins++;

@@ -43,7 +43,7 @@ class Game extends React.Component {
     while (!this.state.grid[col][row] && row < this.state.grid[0].length) {
       row++;
     }
-    let updatedGrid = this.state.grid;
+    let updatedGrid = this.state.grid.slice();
     updatedGrid[col][--row] = this.state.current;
     this.setState({ grid: updatedGrid }, () =>
       this.checkWinOrTie(col, row, this.endTurn.bind(this))
@@ -62,6 +62,10 @@ class Game extends React.Component {
   }
 
   endGame(message) {
+    let players = Object.assign({}, this.state.players);
+    players[this.state.current].wins++;
+    this.setState({ players: players });
+
     let newGame = confirm(message);
     if (newGame) {
       this.setState(

@@ -11,7 +11,8 @@ class Game extends React.Component {
       N: 4,
       grid: helpers.newGrid(7, 6),
       current: 0,
-      turnCounter: 0
+      turnCounter: 0,
+      defender: null
     };
   }
 
@@ -31,9 +32,10 @@ class Game extends React.Component {
   }
 
   startNewGame() {
+    debugger;
     this.setState({
       grid: helpers.newGrid(this.state.N + 3, this.state.N + 2),
-      current: this.state.defender || 0,
+      current: this.state.defender === null ? 0 : this.state.defender,
       turnCounter: 0
     });
   }
@@ -47,7 +49,7 @@ class Game extends React.Component {
       row++;
     }
     let updatedGrid = this.state.grid.slice();
-    updatedGrid[col][--row] = this.state.current ? "R" : "B";
+    updatedGrid[col][--row] = this.state.current ? "B" : "R";
     this.setState({ grid: updatedGrid }, () =>
       this.checkWinOrTie(col, row, this.endTurn.bind(this))
     );
@@ -65,6 +67,8 @@ class Game extends React.Component {
   }
 
   endGame(message) {
+    helpers.saveGame(this.state);
+
     let players = Object.assign({}, this.state.players);
     players[this.state.current].wins++;
     this.setState({ players: players });

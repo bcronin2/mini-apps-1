@@ -39,14 +39,15 @@ class Game extends React.Component {
   }
 
   dropDisc(col) {
-    if (!this.state.grid[col][0]) {
-      let row = 0;
-      while (!this.state.grid[col][row] && row < this.state.grid[0].length) {
-        row++;
-      }
-      this.state.grid[col][--row] = this.state.current;
-      this.checkWinOrTie(col, row, this.endTurn.bind(this));
+    let row = 0;
+    while (!this.state.grid[col][row] && row < this.state.grid[0].length) {
+      row++;
     }
+    let updatedGrid = this.state.grid;
+    updatedGrid[col][--row] = this.state.current;
+    this.setState({ grid: updatedGrid }, () =>
+      this.checkWinOrTie(col, row, this.endTurn.bind(this))
+    );
   }
 
   endTurn(message) {
